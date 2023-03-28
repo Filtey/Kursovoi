@@ -1,0 +1,156 @@
+﻿<Window x:Class="Kursovoi.Auth_Registr.Reg_Auth"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kursovoi.Auth_Registr" 
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        Title="Reg_Auth" Height="450" Width="380"
+        AllowsTransparency="True" Background="Transparent"
+        WindowStyle="None" ResizeMode="NoResize"
+        MouseDown="Window_MouseDown"
+        WindowStartupLocation="CenterScreen"     
+        Icon="../Images/Sporticon.ico"
+        Style="{DynamicResource WindowStyle}">
+    <Grid>
+        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+
+
+            <Border CornerRadius="10" Grid.RowSpan="2" Background="#223266">
+                <!--<Border.Background>
+                    <LinearGradientBrush>
+                        <GradientStop Color="#010066" Offset="1"/>
+                        <GradientStop Color="#ED1C81" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>-->
+            </Border>
+
+
+
+
+
+            <StackPanel VerticalAlignment="Center">
+
+
+                    <Image  Source="../Images/closewhite.png" 
+                            Width="20"
+                            VerticalAlignment="Top"
+                            HorizontalAlignment="Right"
+                            Margin="0 -30 20 0"                        
+                            Style="{DynamicResource iconApp}"
+                            MouseLeftButtonDown="ExitApp"/>
+
+                <Image Source="../Images/sportmasterlogo.png" Width="170" />
+                <!--<TextBlock Text="Спортмастер"
+                           FontWeight="Light"
+                           FontFamily="helvetica"
+                           FontSize="22"
+                           Foreground="White"
+                           HorizontalAlignment="Center"/>-->
+               
+            </StackPanel>
+
+
+
+            <StackPanel Grid.Row="1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBox FontFamily="Helvetica"
+                         x:Name="UsTbx"   
+                         FontWeight="Light"
+                         Text="ИМЯ ПОЛЬЗОВАТЕЛЯ"
+                         FontSize="20"
+                         HorizontalAlignment="Left"
+                         Foreground="White"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Width="235"
+                         HorizontalContentAlignment="Left"
+                         Opacity="0.5"
+                         Height="25"
+                         Margin="65, 0, 0, 0"
+                         />
+                    <iconPacks:PackIconMaterial 
+                    Kind="Account" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Foreground="White"
+                    />
+                </StackPanel>
+
+                <Border
+                Width="250"
+                Height="2"
+                Opacity="0.5"
+                Background="White"
+                />
+
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <PasswordBox FontFamily="Helvetica"
+                         FontWeight="Light"
+                         x:Name="PasswTbx"   
+                         Password="PASSWORD"
+                         FontSize="20"
+                         HorizontalAlignment="Left"
+                         Foreground="White"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Width="235"
+                         HorizontalContentAlignment="Left"
+                         Opacity="0.5"
+                         Height="25"
+                             Margin="65, 0, 0, 0"
+                         />
+                    <iconPacks:PackIconMaterial 
+                    Kind="FormTextboxPassword" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Foreground="White"
+                    />
+                </StackPanel>
+
+                <Border
+                Width="250"
+                Height="2"
+                Opacity="0.5"
+                Background="White"
+                />
+
+
+                <StackPanel Orientation="Horizontal" Margin="0,40,0,0">
+                    <Button Width="200" 
+                            Height="40" 
+                            Style="{DynamicResource butStyle}"
+                            Content="ВХОД"                       
+                            Margin="90,0,60,0"
+                            Click="LoginClick"/>   
+
+                  
+                </StackPanel>
+
+
+                <StackPanel  Margin="0 40 0 0">
+                    <Label Content="©️Все права защищены."
+                       Foreground="LightGray" 
+                       HorizontalContentAlignment="Center"                      
+                       /> 
+                    
+
+                </StackPanel>
+            </StackPanel>
+
+           
+          
+
+
+
+
+        </Grid>
+    </Grid>
+</Window>
