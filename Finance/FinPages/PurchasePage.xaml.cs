@@ -1,7 +1,7 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -19,7 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Kursovoi.Finance.FinPages
+namespace StoreSystem.Finance.FinPages
 {
     public partial class PurchasePage : Page
     {

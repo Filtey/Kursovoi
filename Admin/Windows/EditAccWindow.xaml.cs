@@ -1,6 +1,6 @@
-﻿using Kursovoi.Auth_Registr.UserControls;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
+﻿using StoreSystem.Auth_Registr.UserControls;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +17,10 @@ using System.Windows.Media.Animation;
 using System.Security.Cryptography;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 
-namespace Kursovoi.Admin.Windows
+namespace StoreSystem.Admin.Windows
 {
     /// <summary>
     /// Логика взаимодействия для EditAccPage.xaml

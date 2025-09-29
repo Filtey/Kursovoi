@@ -1,6 +1,6 @@
-﻿using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+﻿using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Kursovoi.Finance.FinPages
+namespace StoreSystem.Finance.FinPages
 {
     /// <summary>
     /// Логика взаимодействия для MainFinPage.xaml

@@ -1,8 +1,8 @@
-﻿using Kursovoi.Cashier.CashWindows;
-using Kursovoi.Classes;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+﻿using StoreSystem.Cashier.CashWindows;
+using StoreSystem.Classes;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using Org.BouncyCastle.Asn1.X500;
 using System;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Kursovoi.Finance.FinPages
+namespace StoreSystem.Finance.FinPages
 {
     /// <summary>
     /// Логика взаимодействия для ShiftsCashierPage.xaml

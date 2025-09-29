@@ -1,5 +1,5 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
@@ -18,7 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Yandex.Checkout.V3;
 
-namespace Kursovoi.Cashier.CashWindows
+namespace StoreSystem.Cashier.CashWindows
 {
     /// <summary>
     /// Логика взаимодействия для CheckForPrint.xaml

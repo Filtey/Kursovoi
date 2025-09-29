@@ -3,7 +3,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Kursovoi.Classes
+namespace StoreSystem.Classes
 {
     public class Hashing
     {

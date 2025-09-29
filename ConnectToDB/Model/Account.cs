@@ -1,5 +1,5 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kursovoi.ConnectToDB.Model
+namespace StoreSystem.ConnectToDB.Model
 {
     [Table("Account")]
     public class Account

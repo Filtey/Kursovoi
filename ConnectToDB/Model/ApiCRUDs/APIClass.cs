@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using System.Net.Http.Json;
 using Yandex.Checkout.V3;
 
-namespace Kursovoi.ConnectToDB.Model.ApiCRUDs
+namespace StoreSystem.ConnectToDB.Model.ApiCRUDs
 {
     public class APIClass
     {

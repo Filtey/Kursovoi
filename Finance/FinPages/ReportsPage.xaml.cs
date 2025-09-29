@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.Win32;
 using System;
@@ -14,9 +14,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 
 // !!! подключи пространство имён, где лежат модели: Sell, SellTovars, Account, Tovar, Sklad, Shipment, History
-// using Kursovoi.ConnectToDB.Model;  // пример
+// using StoreSystem.ConnectToDB.Model;  // пример
 
-namespace Kursovoi.Finance.FinPages
+namespace StoreSystem.Finance.FinPages
 {
     public partial class ReportsPage : Page
     {

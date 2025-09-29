@@ -1,5 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Net.Http.Json;
 
-namespace Kursovoi.Auth_Registr
+namespace StoreSystem.Auth_Registr
 {
     /// <summary>
     /// Логика взаимодействия для Window1.xaml

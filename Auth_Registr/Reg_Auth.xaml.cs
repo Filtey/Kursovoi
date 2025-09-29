@@ -1,5 +1,5 @@
-﻿using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
+﻿using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,11 +15,11 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
-using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using Npgsql;
 
-namespace Kursovoi.Auth_Registr
+namespace StoreSystem.Auth_Registr
 {
     /// <summary>
     /// Логика взаимодействия для Reg_Auth.xaml

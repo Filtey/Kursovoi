@@ -1,7 +1,7 @@
-﻿using Kursovoi.Auth_Registr;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.Skladnoi.Pages;
+﻿using StoreSystem.Auth_Registr;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.Skladnoi.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Skladnoi
+namespace StoreSystem.Skladnoi
 {
     /// <summary>
     /// Логика взаимодействия для MainSkladnoi.xaml

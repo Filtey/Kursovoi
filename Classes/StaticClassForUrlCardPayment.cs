@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kursovoi.Classes
+namespace StoreSystem.Classes
 {
     public static class StaticClassForUrlCardPayment
     {

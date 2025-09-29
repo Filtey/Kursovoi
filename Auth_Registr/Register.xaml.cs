@@ -1,5 +1,5 @@
-﻿using Kursovoi.Auth_Registr.UserControls;
-using Kursovoi.ConnectToDB;
+﻿using StoreSystem.Auth_Registr.UserControls;
+using StoreSystem.ConnectToDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Auth_Registr
+namespace StoreSystem.Auth_Registr
 {
     /// <summary>
     /// Логика взаимодействия для Register.xaml

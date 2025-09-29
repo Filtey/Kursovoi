@@ -1,6 +1,6 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Classes
+namespace StoreSystem.Classes
 {
     public class ShipInHistoryClass
     {

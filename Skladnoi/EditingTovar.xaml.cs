@@ -13,13 +13,13 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Kursovoi.Auth_Registr.UserControls;
-using Kursovoi.Classes;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.Auth_Registr.UserControls;
+using StoreSystem.Classes;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 
-namespace Kursovoi.Skladnoi
+namespace StoreSystem.Skladnoi
 {
 
     /// <summary>

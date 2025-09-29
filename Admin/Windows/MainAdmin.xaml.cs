@@ -1,6 +1,6 @@
-﻿using Kursovoi.Admin.Pages;
-using Kursovoi.Auth_Registr;
-using Kursovoi.ConnectToDB.Model;
+﻿using StoreSystem.Admin.Pages;
+using StoreSystem.Auth_Registr;
+using StoreSystem.ConnectToDB.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Admin.Windows
+namespace StoreSystem.Admin.Windows
 {
     /// <summary>
     /// Логика взаимодействия для MainAdmin.xaml

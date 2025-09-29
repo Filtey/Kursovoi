@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kursovoi.ConnectToDB.Model
+namespace StoreSystem.ConnectToDB.Model
 {
     [Table("SellTovars")]
     public class SellTovars

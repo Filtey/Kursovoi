@@ -1,7 +1,7 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
-using Kursovoi.Skladnoi;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.Skladnoi;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,7 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Cashier.Refund
+namespace StoreSystem.Cashier.Refund
 {
 
     public class ForOutputTovarsInPaycheck

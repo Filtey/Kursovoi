@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Auth_Registr.UserControls
+namespace StoreSystem.Auth_Registr.UserControls
 {
     /// <summary>
     /// Логика взаимодействия для TextInfo.xaml

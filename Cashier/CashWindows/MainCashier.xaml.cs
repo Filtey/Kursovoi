@@ -1,11 +1,11 @@
 ﻿using Google.Protobuf.WellKnownTypes;
-using Kursovoi.Auth_Registr;
-using Kursovoi.Auth_Registr.UserControls;
-using Kursovoi.Cashier.Refund;
-using Kursovoi.Classes;
-using Kursovoi.ConnectToDB;
-using Kursovoi.ConnectToDB.Model;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using StoreSystem.Auth_Registr;
+using StoreSystem.Auth_Registr.UserControls;
+using StoreSystem.Cashier.Refund;
+using StoreSystem.Classes;
+using StoreSystem.ConnectToDB;
+using StoreSystem.ConnectToDB.Model;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,7 +26,7 @@ using System.Windows.Threading;
 using System.Windows.Xps.Packaging;
 using Yandex.Checkout.V3;
 
-namespace Kursovoi.Cashier.CashWindows
+namespace StoreSystem.Cashier.CashWindows
 {
     /// <summary>
     /// Логика взаимодействия для MainCashier.xaml

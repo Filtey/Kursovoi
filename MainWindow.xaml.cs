@@ -14,8 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Kursovoi.Auth_Registr;
-namespace Kursovoi
+using StoreSystem.Auth_Registr;
+namespace StoreSystem
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

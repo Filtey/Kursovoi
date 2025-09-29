@@ -1,5 +1,5 @@
-﻿using Kursovoi.Classes;
-using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+﻿using StoreSystem.Classes;
+using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace Kursovoi.Cashier.CashWindows
+namespace StoreSystem.Cashier.CashWindows
 {
     /// <summary>
     /// Логика взаимодействия для OpenShift.xaml
