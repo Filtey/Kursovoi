@@ -32,17 +32,18 @@
                       Margin="0 20 0 0"
                       StaysOpenOnEdit="True"
                       SelectionChanged="SelectedTovarType"
-                      DisplayMemberPath="Name"
-                          SelectedValuePath="Artikul">
-                    <!--<ComboBox.ItemTemplate>
+                     
+                      SelectedValuePath="Artikul">
+                  
+                    <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Artikul}"/>
+                                <TextBlock Text="{Binding  Production_date, StringFormat=dd-MM-yyyy}"/>
                                 <TextBlock Text=" "/>
                                 <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>-->
+                    </ComboBox.ItemTemplate>
                   
                 </ComboBox>
                 <uc:MyTextBox  Hint=" напишите кол-во товара..."

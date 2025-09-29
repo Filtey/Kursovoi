@@ -1,6 +1,7 @@
 ﻿using Kursovoi.Auth_Registr.UserControls;
 using Kursovoi.ConnectToDB;
 using Kursovoi.ConnectToDB.Model;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,40 +24,58 @@ namespace Kursovoi.Skladnoi
     /// </summary>
     public partial class AddNewManufWindow : Window
     {
-        DataContext db;
+        APIClass db;
         public AddNewManufWindow()
         {
-            db = new DataContext();
             InitializeComponent();
+            try
+            {
+                db = new APIClass();
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void AddTovarClick(object sender, RoutedEventArgs e)
         {
-            //проверяем почту
-            var Email = EmailTextbox.textBox.Text;
-
-            string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
-
-            if (!Regex.IsMatch(Email, pattern)) //почта невалидна
+            try
             {
-                MessageBox.Show("Недействительный адрес эл.почты!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                //проверяем почту
+                var Email = EmailTextbox.textBox.Text;
+
+                string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+
+                if (!Regex.IsMatch(Email, pattern)) //почта невалидна
+                {
+                    MessageBox.Show("Недействительный адрес эл.почты!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                Manufacturer man = new Manufacturer
+                {
+                    Name_Company = NameCompanyTextbox.textBox.Text,
+                    FIO_director = NameTextbox.textBox.Text,
+                    Address = AddressTextbox.textBox.Text,
+                    Email = EmailTextbox.textBox.Text
+                };
+
+                db.AddManufacturer(man);
+                // db.SaveChanges();
+                MessageBoxResult r = MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                if (r == MessageBoxResult.OK)
+                    Close();
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            Manufacturer man = new Manufacturer
-            {
-                Name_Company = NameCompanyTextbox.textBox.Text,
-                FIO_director = NameTextbox.textBox.Text,
-                Address = AddressTextbox.textBox.Text,
-                Email = EmailTextbox.textBox.Text
-            };
-
-            db.Manufacturer.Add(man);
-            db.SaveChanges();
-            MessageBoxResult r =  MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
-           
-            if(r == MessageBoxResult.OK)
-            Close();
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)

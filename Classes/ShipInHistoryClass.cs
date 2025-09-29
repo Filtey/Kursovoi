@@ -22,6 +22,7 @@ namespace Kursovoi.Classes
     public class ShipInHistoryClass
     {
         public Shipment shipment { get; set; }
+        public Tovar tovar { get; set; }
         public int Number { get; set; }
         public Brush BgColor { get; set; }
     }   

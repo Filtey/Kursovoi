@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Kursovoi.Classes;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,7 +24,7 @@ namespace Kursovoi.ConnectToDB.Model
         public string Phone { get; set; }       
         public string? Email { get; set; }
         public List<Autorization> Autorization { get; set; } = new();
-        public List<AutoPurchase> AutoPurchase { get; set; }
+
     }
 }
 

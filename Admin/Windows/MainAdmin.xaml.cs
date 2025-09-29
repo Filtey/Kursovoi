@@ -44,12 +44,20 @@ namespace Kursovoi.Admin.Windows
         //исчезает окно
         private void Logout(object sender, RoutedEventArgs e)
         {
-            DoubleAnimation cancelAnim = new DoubleAnimation();
-            cancelAnim.From = 1;
-            cancelAnim.To = 0;
-            cancelAnim.Duration = TimeSpan.FromSeconds(0.4);
-            cancelAnim.Completed += cancelAnim_Completed;
-            BeginAnimation(Window.OpacityProperty, cancelAnim);
+            try
+            {
+                DoubleAnimation cancelAnim = new DoubleAnimation();
+                cancelAnim.From = 1;
+                cancelAnim.To = 0;
+                cancelAnim.Duration = TimeSpan.FromSeconds(0.4);
+                cancelAnim.Completed += cancelAnim_Completed;
+                BeginAnimation(Window.OpacityProperty, cancelAnim);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
 

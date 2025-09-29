@@ -527,19 +527,19 @@
                                         <Border Width="25" Height="25" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BgColor}">
                                             <TextBlock Text=" " VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
                                         </Border>
-                                        <TextBlock Text="{Binding Date}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding }" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTextColumn Header="Дата" 
+                        <DataGridTextColumn Header="Дата продажи" 
                                             IsReadOnly="True"
                                             FontSize="24"                                    
                                             Width="*"              
-                                            Binding="{Binding sellTovars.Date_sell,StringFormat={}{0:dd.MM.yy}}"/>
+                                            Binding="{Binding sellTovars.Date_sell,StringFormat={}{0:dd.MM.yy hh:mm:ss}}"/>
                        
-                             <DataGridTextColumn Header="Номер" 
+                             <DataGridTextColumn Header="Номер чека" 
                                             IsReadOnly="True"
                                             FontSize="24"
                                             Width="*"                
@@ -590,7 +590,7 @@
                                             CanUserResize="False"
                                             FontSize="16"
                                             Width="140"                                            
-                                            Binding="{Binding sell.Tovar.Artikul}"/>
+                                            Binding="{Binding tovar.Artikul}"/>
 
 
                         <DataGridTextColumn Header="Наименование товара" 
@@ -598,7 +598,7 @@
                                             CanUserResize="False"
                                             FontSize="16"
                                             Width="200"
-                                            Binding="{Binding sell.Tovar.Name}"/>
+                                            Binding="{Binding tovar.Name}"/>
 
 
                         <DataGridTextColumn Header="Кол-во" 

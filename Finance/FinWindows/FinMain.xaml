@@ -98,6 +98,26 @@
                         <fa:IconImage Icon="ShoppingCart" Style="{DynamicResource menuButtonIcon}"/>
                         <TextBlock Text="Все продажи" Style="{DynamicResource menuButtonText}"/>
                     </StackPanel>
+                </Button> 
+                
+                <Button Style="{DynamicResource menuButton}"
+                        Click="ShiftsCashierPagePerexod"
+                         Margin="0 0 0 20"
+                        x:Name="ShiftsButton">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="CashRegister" Style="{DynamicResource menuButtonIcon}"/>
+                        <TextBlock Text="Все смены кассиров" Style="{DynamicResource menuButtonText}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{DynamicResource menuButton}"
+                        Click="ReportPagePerexod"
+                        Margin="0 0 0 20"
+                        x:Name="ReportButton">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="ClipboardList" Style="{DynamicResource menuButtonIcon}"/>
+                        <TextBlock Text="Отчеты" Style="{DynamicResource menuButtonText}"/>
+                    </StackPanel>
                 </Button>
 
                 <!--<Button Style="{DynamicResource menuButton}"
@@ -109,7 +129,7 @@
                     </StackPanel>
                 </Button>-->
                 
-                <Button Style="{DynamicResource menuButton}" Margin="0 330 0 0"
+                <Button Style="{DynamicResource menuButton}" Margin="0 210 0 0"
                         Click="Logout">
                     <StackPanel Orientation="Horizontal">
                         <fa:IconImage Icon="SignOut" Style="{DynamicResource menuButtonIcon}"/>

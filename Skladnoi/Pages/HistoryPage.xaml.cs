@@ -1,6 +1,7 @@
 ﻿using Kursovoi.Classes;
 using Kursovoi.ConnectToDB;
 using Kursovoi.ConnectToDB.Model;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Kursovoi.Skladnoi.Pages
 {
@@ -26,162 +28,246 @@ namespace Kursovoi.Skladnoi.Pages
     {
         ObservableCollection<HistorySkladnoiClass> history = new ObservableCollection<HistorySkladnoiClass>(); //товары склад
         ObservableCollection<ShipInHistoryClass> shipInHistory = new ObservableCollection<ShipInHistoryClass>(); //товары склад
-        private DataContext db = new DataContext();
+        private APIClass db;
+        List<Tovar> t;
+        List<Sklad> s;
+        List<Shipment> ss;
+        List<History> his;
+
+        private DispatcherTimer timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        private int timeForTimer = 90;
         public HistoryPage()
         {
             InitializeComponent();
-
-            Loading();
+            try
+            {
+                Loading();
+                timer.Tick += Timer_Tick;
+                timer.Start();
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
         }
 
+        private void Timer_Tick(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (timeForTimer == 0) // обновляем окно
+                {
+                    timeForTimer = 90;
+                    Loading();
+                    return;
+                }
+
+                timeForTimer--;
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        }
+
+
+
+
         public void Loading()
         {
-           // db = new DataContext();
-            #region взаимодействуем с таблицами, между которым установлена нужная нам связь
-            List<Tovar> t = db.Tovar.ToList();
-            List<Sklad> s = db.Sklad.ToList();
-            List<Shipment> ss = db.Shipment.ToList();
-            #endregion
-            history = new ObservableCollection<HistorySkladnoiClass>();
-
-            //добавление товаров в список (из листа в обсерабл)
-            string stat = "";
-            var local = db.History.ToList();
-            Random rnd = new Random();
-            int i = 0;
-            foreach (var item in local)
+            try
             {
-               
+                db = new APIClass();
+                // db = new DataContext();
+                #region взаимодействуем с таблицами, между которым установлена нужная нам связь
+                t = db.TovarList();
+                s = db.SkladList();
+                ss = db.ShipmentList();
+                his = db.HistoryList();
+                #endregion
+                history = new ObservableCollection<HistorySkladnoiClass>();
 
-                i++;
-                history.Add(new HistorySkladnoiClass
+                //добавление товаров в список (из листа в обсерабл)
+                string stat = "";
+                var local = his;
+                Random rnd = new Random();
+                int i = 0;
+                foreach (var item in local)
                 {
-                    history = item,
-                    Number = i,
-                    BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 256), (byte)rnd.Next(100, 256)))
-                 
-                });
+
+
+                    i++;
+                    history.Add(new HistorySkladnoiClass
+                    {
+                        history = item,
+                        Number = i,
+                        BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 156), (byte)rnd.Next(100, 256)))
+                    });
+                }
+
+
+                DataGridtable.ItemsSource = history;
+
+
+                CountRezultTbx.Text = "Результатов: " + history.Count;
+
+                #region для группировки (уже ненужно)
+                //    ListCollectionView collection = new ListCollectionView(history);
+                //   collection.GroupDescriptions.Add(new PropertyGroupDescription("history.Date"));
+                #endregion
             }
-
-
-            DataGridtable.ItemsSource = history; 
-
-
-            CountRezultTbx.Text = "Результатов: " + history.Count;
-
-            #region для группировки (уже ненужно)
-            //    ListCollectionView collection = new ListCollectionView(history);
-            //   collection.GroupDescriptions.Add(new PropertyGroupDescription("history.Date"));
-            #endregion 
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void SelectedHistoryDG(object sender, MouseButtonEventArgs e)
         {
-            backButton.Visibility = Visibility.Visible;
-            DataGridshipment.Visibility = Visibility.Visible;
-            DataGridtable.Visibility = Visibility.Hidden;
-
-
-            #region взаимодействуем с таблицами, между которым установлена нужная нам связь
-            List<History> t = db.History.ToList();
-            List<Shipment> s = db.Shipment.ToList();
-            List<Tovar> ss = db.Tovar.ToList();
-            #endregion
-
-
-            HistorySkladnoiClass perexod = (HistorySkladnoiClass)DataGridtable.SelectedItem;
-            shipInHistory = new ObservableCollection<ShipInHistoryClass>();
-            var local = db.Shipment.Where(x => x.History_id == perexod.history.History_id).ToList();
-            Random rnd = new Random();
-            int i = 0;
-            foreach (var item in local)
+            try
             {
-                i++;
-                shipInHistory.Add(new ShipInHistoryClass
+                backButton.Visibility = Visibility.Visible;
+                DataGridshipment.Visibility = Visibility.Visible;
+                DataGridtable.Visibility = Visibility.Hidden;
+
+
+                #region (NO)  взаимодействуем с таблицами, между которым установлена нужная нам связь
+                //List<History> t = db.History.ToList();
+                //List<Shipment> s = db.Shipment.ToList();
+                //List<Tovar> ss = db.Tovar.ToList();
+                #endregion
+
+
+                HistorySkladnoiClass perexod = (HistorySkladnoiClass)DataGridtable.SelectedItem;
+                shipInHistory = new ObservableCollection<ShipInHistoryClass>();
+                var local = ss.Where(x => x.History_id == perexod.history.History_id).ToList();
+                Random rnd = new Random();
+                int i = 0;
+                foreach (var item in local)
                 {
-                    shipment = item,
-                    Number = i,
-                    BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 256), (byte)rnd.Next(100, 256))),
-                });
+                    i++;
+                    shipInHistory.Add(new ShipInHistoryClass
+                    {
+                        shipment = item,
+                        Number = i,
+                        tovar = t.First(x => x.Tovar_id == item.Tovar_id),
+                        BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 156), (byte)rnd.Next(100, 256))),
+
+                    });
+                }
+
+
+                DataGridshipment.ItemsSource = null;
+                DataGridshipment.ItemsSource = shipInHistory;
+
+                CountRezultTbx.Text = "Результатов: " + shipInHistory.Count;
             }
-
-
-            DataGridshipment.ItemsSource = null;
-            DataGridshipment.ItemsSource = shipInHistory;
-
-            CountRezultTbx.Text = "Результатов: " + shipInHistory.Count;
-
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void Back(object sender, RoutedEventArgs e)
         {
-            backButton.Visibility = Visibility.Hidden;
-            DataGridshipment.Visibility = Visibility.Hidden;
-            DataGridtable.Visibility = Visibility.Visible;
-            
-            DataGridtable.ItemsSource = null;
-            DataGridtable.ItemsSource = history;
+            try
+            {
+                backButton.Visibility = Visibility.Hidden;
+                DataGridshipment.Visibility = Visibility.Hidden;
+                DataGridtable.Visibility = Visibility.Visible;
 
-            CountRezultTbx.Text = "Результатов: " + history.Count;
+                DataGridtable.ItemsSource = null;
+                SearchTextBox(null, null);
+                // DataGridtable.ItemsSource = history;
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
         }
 
         private void SearchTextBox(object sender, TextChangedEventArgs e)
         {
-            //выводит даты, где содержится данный товар
-
-
-            #region поиск
-
-            List<Shipment> ship = db.Shipment.ToList();
-            List<Shipment> need = new List<Shipment>();
-            
-            foreach (var item in ship)
+            try
             {
-                if (item.Tovar.Artikul.ToString().Contains(txtSearch.Text))
+                //выводит даты, где содержится данный товар
+
+
+                #region поиск
+
+                List<Shipment> ship = ss;
+                List<Shipment> need = new List<Shipment>();
+
+                foreach (var item in ship)
                 {
-                    need.Add(item);
+                    var proverka = t.First(x => x.Tovar_id == item.Tovar_id);
+                    if (proverka.Artikul.ToString().Contains(txtSearch.Text) || proverka.Name.ToLower().ToString().Contains(txtSearch.Text.ToLower()))
+                    {
+                        need.Add(item);
+                    }
                 }
-            }
 
-            List<History> search = new List<History>();    
-            foreach (var item in need)
+                List<History> search = new List<History>();
+                foreach (var item in need)
+                {
+                    search.Add(his.First(x => x.History_id == item.History_id));
+                }
+                search = search.Distinct().ToList();
+
+                List<HistorySkladnoiClass> foundHistory = new List<HistorySkladnoiClass>();
+
+                string stat = "";
+                int i = 0;
+                Random rnd = new Random();
+                foreach (var item in search)
+                {
+                    i++;
+
+
+                    foundHistory.Add(new HistorySkladnoiClass
+                    {
+                        history = item,
+                        Number = i,
+                        BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 156), (byte)rnd.Next(100, 256)))
+
+                    });
+                }
+                foundHistory = foundHistory.Distinct().ToList();
+
+
+
+
+
+                DataGridtable.ItemsSource = foundHistory;
+                CountRezultTbx.Text = "Результатов: " + foundHistory.Count;
+                if (txtSearch.Text == "" || txtSearch.Text == null || txtSearch.Text.Trim(' ').Length == 0)
+                {
+                    DataGridtable.ItemsSource = history;
+                    CountRezultTbx.Text = "Результатов: " + history.Count;
+                }
+                #endregion
+            }
+            catch (Exception ee)
             {
-                search.Add(item.History);
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            search = search.Distinct().ToList();
-
-            List<HistorySkladnoiClass> foundHistory = new List<HistorySkladnoiClass>();
-            
-            string stat = "";
-            int i = 0;
-            Random rnd = new Random();
-            foreach (var item in search)
-            {
-                i++;
-               
-                
-                  foundHistory.Add(new HistorySkladnoiClass 
-                  { 
-                    history = item,
-                    Number = i,
-                    BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 256), (byte)rnd.Next(100, 256)))
-                  });
-            }
-            foundHistory = foundHistory.Distinct().ToList();
-
-
-
-
-
-            DataGridtable.ItemsSource = foundHistory;
-            CountRezultTbx.Text = "Результатов: " + foundHistory.Count;
-            if (txtSearch.Text == "" || txtSearch.Text == null || txtSearch.Text.Trim(' ').Length == 0)
-            {
-                DataGridtable.ItemsSource = history;
-                CountRezultTbx.Text = "Результатов: " + history.Count;
-            }
-            #endregion
         }
 
         #region зелень

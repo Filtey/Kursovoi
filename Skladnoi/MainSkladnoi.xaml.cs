@@ -25,17 +25,25 @@ namespace Kursovoi.Skladnoi
     public partial class MainSkladnoi : Window
     {
         Account account;
-        private DataContext db;
+        //private DataContext db;
 
         public MainSkladnoi(Account _account)
         {
             InitializeComponent();
-            db = new DataContext();
-         
-            account = _account;
-            TbFamName.Text = account.Surname.Substring(0, 1) + account.Name.Substring(0, 1);
-            FIOTb.Text = account.Surname + " " + account.Name;
-            frameContent.Navigate(new Main());
+            // db = new DataContext();
+            try
+            {
+                account = _account;
+                TbFamName.Text = account.Surname.Substring(0, 1) + account.Name.Substring(0, 1);
+                FIOTb.Text = account.Surname + " " + account.Name;
+                frameContent.Navigate(new Main());
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -49,21 +57,39 @@ namespace Kursovoi.Skladnoi
         //исчезает окно
         private void Logout(object sender, RoutedEventArgs e)
         {
-            DoubleAnimation cancelAnim = new DoubleAnimation();
-            cancelAnim.From = 1;
-            cancelAnim.To = 0;
-            cancelAnim.Duration = TimeSpan.FromSeconds(0.4);
-            cancelAnim.Completed += cancelAnim_Completed;
-            BeginAnimation(Window.OpacityProperty, cancelAnim);
+            try
+            {
+                DoubleAnimation cancelAnim = new DoubleAnimation();
+                cancelAnim.From = 1;
+                cancelAnim.To = 0;
+                cancelAnim.Duration = TimeSpan.FromSeconds(0.4);
+                cancelAnim.Completed += cancelAnim_Completed;
+                BeginAnimation(Window.OpacityProperty, cancelAnim);
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
 
         //после исчезновения окна закрываем его и открываем окно входа
         private void cancelAnim_Completed(object sender, EventArgs e)
         {
-            Reg_Auth ra = new Reg_Auth();
-            Close();
-            ra.Show();
+            try
+            {
+                Reg_Auth ra = new Reg_Auth();
+                Close();
+                ra.Show();
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void MainPerexod(object sender, RoutedEventArgs e)

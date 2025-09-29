@@ -8,22 +8,23 @@ using System.Threading.Tasks;
 
 namespace Kursovoi.ConnectToDB.Model
 {
-    [Table("AutoPurchase")]
-    public class AutoPurchase
+    [Table("Refund")]
+    public class Refund
     {
         [Key]
-        public int AutoPurchase_id { get; set; }
-        public int Account_id { get; set; }
-        public int Min_quantity { get; set; }
+        public int Refund_id { get; set; }
+        public DateTime Date { get; set; }
         public int Tovar_id { get; set; }
+        public int Summary { get; set; }
         public int Count { get; set; }
-
-
-        [ForeignKey("Account_id")]
-        public Account Account { get; set; }
+        public int Cashier_id { get; set; }
+        public string PaymentId { get; set; }
 
 
         [ForeignKey("Tovar_id")]
-        public Tovar Tovar { get; set; }
+        public Tovar Tovar { get; set; }  
+        
+        [ForeignKey("Cashier_id")]
+        public Account Cashier { get; set; }
     }
 }

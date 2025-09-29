@@ -25,16 +25,24 @@ namespace Kursovoi.Finance.FinWindows
     public partial class FinMain : Window
     {
         Account account;
-        DataContext db;
+       // DataContext db;
         public FinMain(Account _acc)
         {
             InitializeComponent();
-            db = new DataContext();
-
-            account = _acc;
-            TbFamName.Text = account.Surname.Substring(0, 1) + account.Name.Substring(0, 1);
-            FIOTb.Text = account.Surname + " " + account.Name;
-            frameContent.Navigate(new MainFinPage());
+            // db = new DataContext();
+            try
+            {
+                account = _acc;
+                TbFamName.Text = account.Surname.Substring(0, 1) + account.Name.Substring(0, 1);
+                FIOTb.Text = account.Surname + " " + account.Name;
+                frameContent.Navigate(new MainFinPage());
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
@@ -49,9 +57,11 @@ namespace Kursovoi.Finance.FinWindows
             var myResourceDictionary = new ResourceDictionary();
             myResourceDictionary.Source = new Uri("pack://application:,,,/ModernButtonTheme.xaml", UriKind.RelativeOrAbsolute);
 
-            ShopButton.Style = myResourceDictionary["menuButtonActive"] as Style;
+            ShopButton.Style      = myResourceDictionary["menuButtonActive"] as Style;
             AutoZakupButton.Style = myResourceDictionary["menuButton"] as Style;
-            MainButton.Style = myResourceDictionary["menuButton"] as Style;
+            MainButton.Style      = myResourceDictionary["menuButton"] as Style;
+            ShiftsButton.Style    = myResourceDictionary["menuButton"] as Style;
+            ReportButton.Style    = myResourceDictionary["menuButton"] as Style;
 
             frameContent.Navigate(new AllOrders());
         } 
@@ -61,23 +71,54 @@ namespace Kursovoi.Finance.FinWindows
             myResourceDictionary.Source = new Uri("pack://application:,,,/ModernButtonTheme.xaml", UriKind.RelativeOrAbsolute);
 
             AutoZakupButton.Style = myResourceDictionary["menuButtonActive"] as Style;
-            MainButton.Style = myResourceDictionary["menuButton"] as Style;
-            ShopButton.Style = myResourceDictionary["menuButton"] as Style;
+            MainButton.Style      = myResourceDictionary["menuButton"] as Style;
+            ShiftsButton.Style    = myResourceDictionary["menuButton"] as Style;
+            ShopButton.Style      = myResourceDictionary["menuButton"] as Style;
+            ReportButton.Style    = myResourceDictionary["menuButton"] as Style;
 
-              frameContent.Navigate(new PurchasePage());
+            frameContent.Navigate(new PurchasePage());
         } 
         private void MainPerexod(object sender, RoutedEventArgs e)
         {
             var myResourceDictionary = new ResourceDictionary();
             myResourceDictionary.Source = new Uri("pack://application:,,,/ModernButtonTheme.xaml", UriKind.RelativeOrAbsolute);
 
-            MainButton.Style = myResourceDictionary["menuButtonActive"] as Style;
+            MainButton.Style      = myResourceDictionary["menuButtonActive"] as Style;
+            ShiftsButton.Style    = myResourceDictionary["menuButton"] as Style;
             AutoZakupButton.Style = myResourceDictionary["menuButton"] as Style;
-            ShopButton.Style = myResourceDictionary["menuButton"] as Style;
+            ShopButton.Style      = myResourceDictionary["menuButton"] as Style;
+            ReportButton.Style    = myResourceDictionary["menuButton"] as Style;
 
             frameContent.Navigate(new MainFinPage());
         }
-      
+        
+        private void ShiftsCashierPagePerexod(object sender, RoutedEventArgs e)
+        {
+            var myResourceDictionary = new ResourceDictionary();
+            myResourceDictionary.Source = new Uri("pack://application:,,,/ModernButtonTheme.xaml", UriKind.RelativeOrAbsolute);
+
+            ShiftsButton.Style    = myResourceDictionary["menuButtonActive"] as Style;
+            MainButton.Style      = myResourceDictionary["menuButton"] as Style;
+            AutoZakupButton.Style = myResourceDictionary["menuButton"] as Style;
+            ShopButton.Style      = myResourceDictionary["menuButton"] as Style;
+            ReportButton.Style    = myResourceDictionary["menuButton"] as Style;
+
+            frameContent.Navigate(new ShiftsCashierPage());
+        }
+        private void ReportPagePerexod(object sender, RoutedEventArgs e)
+        {
+            var myResourceDictionary = new ResourceDictionary();
+            myResourceDictionary.Source = new Uri("pack://application:,,,/ModernButtonTheme.xaml", UriKind.RelativeOrAbsolute);
+
+            ReportButton.Style    = myResourceDictionary["menuButtonActive"] as Style;
+            ShiftsButton.Style    = myResourceDictionary["menuButton"] as Style;
+            MainButton.Style      = myResourceDictionary["menuButton"] as Style;
+            AutoZakupButton.Style = myResourceDictionary["menuButton"] as Style;
+            ShopButton.Style      = myResourceDictionary["menuButton"] as Style;
+
+
+            frameContent.Navigate(new ReportsPage());
+        }
 
 
         private void Logout(object sender, RoutedEventArgs e)
@@ -98,6 +139,6 @@ namespace Kursovoi.Finance.FinWindows
             ra.Show();
         }
 
-      
+       
     }
 }

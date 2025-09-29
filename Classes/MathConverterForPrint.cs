@@ -1,0 +1,36 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Data;
+
+namespace Kursovoi.Classes
+{
+    public class MathConverterForPrint : IValueConverter
+    {
+        int price = 0;
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if(parameter !=null)
+            {
+                if (parameter.ToString() == "price")
+                {
+                    price = int.Parse(value.ToString());
+                    return "";
+                }
+            }
+
+            return int.Parse(value.ToString()) * price;
+            
+
+
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

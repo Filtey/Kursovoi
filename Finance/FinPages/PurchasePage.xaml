@@ -332,7 +332,7 @@
                            Foreground="#b0b9c6"
                            IsHitTestVisible="False"
                            Panel.ZIndex="1"
-                           Text="Введите артикул товара для поиска..."
+                           Text="Артикул или наименование товара..."
                            Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                     <TextBox x:Name="txtSearch"
                              Style="{DynamicResource textboxSearch}"
@@ -414,7 +414,7 @@
                                         <Border Width="25" Height="25" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BgColor}">
                                             <TextBlock Text="{Binding NameTovar}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
                                         </Border>
-                                        <TextBlock Text="{Binding sklad.Tovar.Name}" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding tovar.Name}" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -434,7 +434,44 @@
                                             IsReadOnly="True"
                                             Width="80"
                                             Binding="{Binding sklad.Count}"
-                                           />
+                                           >
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Margin" Value="15 0"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                                <Border Background="{TemplateBinding Background}" BorderThickness="0" SnapsToDevicePixels="True">
+                                                    <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding sklad.Count}"  Value="0">
+                                            <Setter Property="Foreground" Value="Red"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                            <Setter Property="Margin" Value="15 0"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                                        <Border Background="{TemplateBinding Background}" BorderThickness="0" SnapsToDevicePixels="True">
+                                                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
 
                         <DataGridTextColumn Header="Ед. изм." 
                                             IsReadOnly="True"

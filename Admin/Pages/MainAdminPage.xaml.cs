@@ -2,6 +2,7 @@
 using Kursovoi.Classes;
 using Kursovoi.ConnectToDB;
 using Kursovoi.ConnectToDB.Model;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Kursovoi.Admin.Pages
 {
@@ -28,82 +30,148 @@ namespace Kursovoi.Admin.Pages
       
         ObservableCollection<AdminClassUsers> members = new ObservableCollection<AdminClassUsers>();
         public ObservableCollection<string> filter = new ObservableCollection<string>();
-        private DataContext db;
+        private APIClass db;
+        private DispatcherTimer timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1)
+        };
+        private int timeForTimer = 90;
 
         public MainAdminPage()
         {
             InitializeComponent();
             var converter = new BrushConverter();
 
-
+            timer.Tick += Timer_Tick;
             Loading();
+            timer.Start();
 
+        }
+
+        private void Timer_Tick(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (timeForTimer == 0) // обновляем окно
+                {
+                    timeForTimer = 90;
+                    Loading();
+                    return;
+                }
+
+                timeForTimer--;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         public void Loading()
         {
-            db = new DataContext();
-            #region взаимодействуем с таблицами, между которым установлена нужная нам связь
-            List<Account> t = db.Account.ToList();
-
-            #endregion
-            members = new ObservableCollection<AdminClassUsers>();
-            //добавление товаров в список (из листа в обсерабл)
-            var local = db.Account.ToList();
-            Random rnd = new Random();
-            int i = 0;
-            foreach (var item in local)
+            try
             {
-                i++;
-                members.Add(new AdminClassUsers
+                db = new APIClass();
+                #region взаимодействуем с таблицами, между которым установлена нужная нам связь
+                List<Account> t = db.AccountList();
+
+                #endregion
+                members = new ObservableCollection<AdminClassUsers>();
+                //добавление товаров в список (из листа в обсерабл)
+                var local = db.AccountList();
+                Random rnd = new Random();
+                int i = 0;
+                foreach (var item in local)
                 {
-                    account = item,
-                    Number = i,
-                    BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 256), (byte)rnd.Next(100, 256))),
-                    NameB = item.Name.Substring(0, 1),
-                });
+                    i++;
+                    members.Add(new AdminClassUsers
+                    {
+                        account = item,
+                        Number = i,
+                        BgColor = new SolidColorBrush(Color.FromArgb((byte)rnd.Next(255, 256), (byte)rnd.Next(255, 256), (byte)rnd.Next(100, 156), (byte)rnd.Next(100, 256))),
+                        NameB = item.Name.Substring(0, 1),
+                    });
+                }
+
+                DataGridtable.ItemsSource = members;
+                CountRezultTbx.Text = "Результатов: " + members.Count;
+
+                List<string> filter = new List<string>();
+                filter = (List<string>)db.AccountList().Select(x => x.Post).Distinct().ToList();
+
+                multicombobox.ItemsSource = filter;
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
 
-            DataGridtable.ItemsSource = members;
-            CountRezultTbx.Text = "Результатов: " + members.Count;
-
-            List<string> filter = new List<string>();
-            filter = (List<string>)db.Account.Select(x => x.Post).Distinct().ToList();
-
-            multicombobox.ItemsSource = filter;
+            }
         }
 
 
         private void EditTovar(object sender, RoutedEventArgs e)
         {
-            AdminClassUsers AccForEditing = (AdminClassUsers)(sender as FrameworkElement).DataContext;
-            EditAccWindow edt = new EditAccWindow(AccForEditing.account); //создать окно редактирования
-            edt.Closing += Adt_Closing;
-            edt.ShowDialog();
+            try
+            {
+                AdminClassUsers AccForEditing = (AdminClassUsers)(sender as FrameworkElement).DataContext;
+                EditAccWindow edt = new EditAccWindow(AccForEditing.account); //создать окно редактирования
+                edt.Closing += Adt_Closing;
+                edt.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void Adt_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            DataGridtable.ItemsSource = null;
-            Loading();
+            try
+            {
+                DataGridtable.ItemsSource = null;
+                Loading();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         private void RemoveAcc(object sender, RoutedEventArgs e)
         {
-            MessageBoxResult rez = MessageBox.Show("Вы точно хотите удалить данного пользователя?", "Внимание!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
-            if (rez == MessageBoxResult.Yes)
+            try
             {
-                AdminClassUsers AccForDeleting = (AdminClassUsers)(sender as FrameworkElement).DataContext;
+                MessageBoxResult rez = MessageBox.Show("Вы точно хотите удалить данного пользователя?", "Внимание!", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                if (rez == MessageBoxResult.Yes)
+                {
+                    AdminClassUsers AccForDeleting = (AdminClassUsers)(sender as FrameworkElement).DataContext;
 
-                db = new DataContext();
-                var del = db.Account.Where(x => x.Account_id == AccForDeleting.account.Account_id).First();
+                    db = new APIClass();
+                    var del = db.AccountList().Where(x => x.Account_id == AccForDeleting.account.Account_id).First();
 
-                db.Account.Remove(del);
+                    var ISshift = db.ShiftList().FirstOrDefault(x => x.Cashier_id == del.Account_id);
 
-                db.SaveChanges();
-                MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK);
-                Loading();
+                    if (ISshift != null)
+                    {
+                        MessageBox.Show("Данный пользователь не может быть удален, пока он взаимодействует с информацией о продажах.", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
+                    string rezultat = db.DeleteAccount(del.Account_id);
+
+                    MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK);
+                    Loading();
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
         }
 
@@ -115,66 +183,84 @@ namespace Kursovoi.Admin.Pages
         /// <param name="e"></param>
         private void CheckedFilter(object sender, RoutedEventArgs e)
         {
-            var SelectedFilter = (sender as FrameworkElement).DataContext;
+            try
+            {
+                var SelectedFilter = (sender as FrameworkElement).DataContext;
 
-            var checkbox = sender as CheckBox;
-            if (checkbox.IsChecked == true) //если выбрали, то добавляем
-            {
-                filter.Add(SelectedFilter.ToString());
+                var checkbox = sender as CheckBox;
+                if (checkbox.IsChecked == true) //если выбрали, то добавляем
+                {
+                    filter.Add(SelectedFilter.ToString());
+                }
+                else
+                {
+                    filter.Remove(SelectedFilter.ToString());
+                }
+                Filtering();
             }
-            else
+            catch (Exception ex)
             {
-                filter.Remove(SelectedFilter.ToString());
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
-            Filtering();
         }
 
 
 
         public void Filtering() //фильтрация
         {
-            #region фильтрация
-            Filtertbx.Text = null;
-            if (filter.Count == 0)
+            try
             {
-                DataGridtable.ItemsSource = members;
-                Filtertbx.Text = "Здесь будут отображаться выбранные фильтры...";
-                CountRezultTbx.Text = "Результатов: " + members.Count;
-                #region поиск если фильтров нет
-                List<AdminClassUsers> search2 = members.Where(x => x.account.Surname.Contains(txtSearch.Text)).ToList();
-
-                DataGridtable.ItemsSource = search2;
-                CountRezultTbx.Text = "Результатов: " + search2.Count;
-                if (txtSearch.Text == "" || txtSearch.Text == null)
+                #region фильтрация
+                Filtertbx.Text = null;
+                if (filter.Count == 0)
                 {
                     DataGridtable.ItemsSource = members;
+                    Filtertbx.Text = "Здесь будут отображаться выбранные фильтры...";
                     CountRezultTbx.Text = "Результатов: " + members.Count;
+                    #region поиск если фильтров нет
+                    List<AdminClassUsers> search2 = members.Where(x => x.account.Surname.Contains(txtSearch.Text)).ToList();
+
+                    DataGridtable.ItemsSource = search2;
+                    CountRezultTbx.Text = "Результатов: " + search2.Count;
+                    if (txtSearch.Text == "" || txtSearch.Text == null)
+                    {
+                        DataGridtable.ItemsSource = members;
+                        CountRezultTbx.Text = "Результатов: " + members.Count;
+                    }
+                    return;
+                    #endregion
                 }
-                return;
-                #endregion
-            }
 
-            var productsss = members.Where(x => filter.Contains(x.account.Post)).ToList();
-            DataGridtable.ItemsSource = productsss;
-
-            foreach (var item in filter)
-            {
-                Filtertbx.Text += item.ToString() + ", ";
-            }
-
-            Filtertbx.Text = Filtertbx.Text.Substring(0, Filtertbx.Text.Length - 2);
-            CountRezultTbx.Text = "Результатов: " + productsss.Count;
-            #endregion
-
-            #region поиск
-            List<AdminClassUsers> search = productsss.Where(x => x.account.Surname.Contains(txtSearch.Text)).ToList();
-
-            DataGridtable.ItemsSource = search;
-            CountRezultTbx.Text = "Результатов: " + search.Count;
-            if (txtSearch.Text == "" || txtSearch.Text == null)
-            {
+                var productsss = members.Where(x => filter.Contains(x.account.Post)).ToList();
                 DataGridtable.ItemsSource = productsss;
+
+                foreach (var item in filter)
+                {
+                    Filtertbx.Text += item.ToString() + ", ";
+                }
+
+                Filtertbx.Text = Filtertbx.Text.Substring(0, Filtertbx.Text.Length - 2);
                 CountRezultTbx.Text = "Результатов: " + productsss.Count;
+                #endregion
+
+                #region поиск
+                List<AdminClassUsers> search = productsss.Where(x => x.account.Surname.ToLower().Contains(txtSearch.Text.ToLower()) ||
+                x.account.Name.ToLower().Contains(txtSearch.Text.ToLower()) || x.account.Patronymic.ToLower().Contains(txtSearch.Text.ToLower()) ||
+                x.account.Phone.ToLower().Contains(txtSearch.Text.ToLower()) || x.account.Email.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+
+                DataGridtable.ItemsSource = search;
+                CountRezultTbx.Text = "Результатов: " + search.Count;
+                if (txtSearch.Text == "" || txtSearch.Text == null)
+                {
+                    DataGridtable.ItemsSource = productsss;
+                    CountRezultTbx.Text = "Результатов: " + productsss.Count;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
             #endregion
 
@@ -182,40 +268,50 @@ namespace Kursovoi.Admin.Pages
 
         private void SearchTextBox(object sender, TextChangedEventArgs e)
         {
-
-            #region поиск
-            List<AdminClassUsers> search = members.Where(x => x.account.Surname.Contains(txtSearch.Text)).ToList();
-
-            DataGridtable.ItemsSource = search;
-            CountRezultTbx.Text = "Результатов: " + search.Count;
-            if (txtSearch.Text == "" || txtSearch.Text == null)
+            try
             {
-                DataGridtable.ItemsSource = members;
-                CountRezultTbx.Text = "Результатов: " + members.Count;
-            }
-            #endregion
 
-            #region фильтрация
-            Filtertbx.Text = null;
-            if (filter.Count == 0)
-            {
+                #region поиск
+                List<AdminClassUsers> search = members.Where(x => x.account.Surname.ToLower().Contains(txtSearch.Text.ToLower()) ||
+              x.account.Name.ToLower().Contains(txtSearch.Text.ToLower()) || x.account.Patronymic.ToLower().Contains(txtSearch.Text.ToLower()) ||
+              x.account.Phone.ToLower().Contains(txtSearch.Text.ToLower()) || x.account.Email.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
+
                 DataGridtable.ItemsSource = search;
-                Filtertbx.Text = "Здесь будут отображаться выбранные фильтры...";
                 CountRezultTbx.Text = "Результатов: " + search.Count;
+                if (txtSearch.Text == "" || txtSearch.Text == null)
+                {
+                    DataGridtable.ItemsSource = members;
+                    CountRezultTbx.Text = "Результатов: " + members.Count;
+                }
+                #endregion
+
+                #region фильтрация
+                Filtertbx.Text = null;
+                if (filter.Count == 0)
+                {
+                    DataGridtable.ItemsSource = search;
+                    Filtertbx.Text = "Здесь будут отображаться выбранные фильтры...";
+                    CountRezultTbx.Text = "Результатов: " + search.Count;
+                    return;
+                }
+
+                var productsss = search.Where(x => filter.Contains(x.account.Post)).ToList();
+                DataGridtable.ItemsSource = productsss;
+
+                foreach (var item in filter)
+                {
+                    Filtertbx.Text += item.ToString() + ", ";
+                }
+
+                Filtertbx.Text = Filtertbx.Text.Substring(0, Filtertbx.Text.Length - 2);
+                CountRezultTbx.Text = "Результатов: " + productsss.Count;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-
-            var productsss = search.Where(x => filter.Contains(x.account.Post)).ToList();
-            DataGridtable.ItemsSource = productsss;
-
-            foreach (var item in filter)
-            {
-                Filtertbx.Text += item.ToString() + ", ";
-            }
-
-            Filtertbx.Text = Filtertbx.Text.Substring(0, Filtertbx.Text.Length - 2);
-            CountRezultTbx.Text = "Результатов: " + productsss.Count;
-            #endregion
         }
 
 

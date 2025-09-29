@@ -22,6 +22,7 @@ namespace Kursovoi.Classes
     public class DatagridSklad
     {
         public Sklad sklad { get; set; }
+        public Tovar tovar { get; set; }
         public string NameTovar { get; set; }
         public int Number { get; set; }
         public Brush BgColor { get; set; }

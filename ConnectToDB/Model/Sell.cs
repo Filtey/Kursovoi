@@ -14,8 +14,11 @@ namespace Kursovoi.ConnectToDB.Model
         [Key]
         public int Sell_id { get; set; }   
         public int Tovar_id { get; set; }
+        public int SellTovars_id { get; set; }
         public int Count { get; set; }
-     
+        public int Summary { get; set; }
+
+
         [ForeignKey("Tovar_id")] 
         public Tovar Tovar { get; set; }
 

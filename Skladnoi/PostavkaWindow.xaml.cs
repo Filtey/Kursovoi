@@ -1,6 +1,7 @@
 ﻿using Kursovoi.Classes;
 using Kursovoi.ConnectToDB;
 using Kursovoi.ConnectToDB.Model;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +24,7 @@ namespace Kursovoi.Skladnoi
     /// </summary>
     public partial class PostavkaWindow : Window
     {
-        DataContext db = new DataContext();
+        APIClass db;
       
         public PostavkaWindow()
         {
@@ -38,34 +39,36 @@ namespace Kursovoi.Skladnoi
 
         private void AddPostClick(object sender, RoutedEventArgs e)
         {
-            if(TovarsListForPostavka.tovarslist.Count == 0)
+            db = new APIClass();
+            List<Sklad> s = db.SkladList();
+            if (TovarsListForPostavka.tovarslist.Count == 0)
             {
                 MessageBox.Show("В списке поставленных товаров ничего нет!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             History hry = new History { Date = DateTime.Now };
-            db.History.Add(hry);
+            db.AddHistory(hry);
             foreach (var item in TovarsListForPostavka.tovarslist)
             { 
                 
-                Sklad skladUpd = db.Sklad.Where(x => x.Tovar == item.tovar).First();
+                Sklad skladUpd = s.Where(x => x.Tovar_id == item.tovar.Tovar_id).First();
                 skladUpd.Count += item.Count;
 
                 Shipment sh = new Shipment();
-                sh.Tovar = skladUpd.Tovar;
+                sh.Tovar_id = skladUpd.Tovar_id;
                 sh.Unit = skladUpd.unit;
                 sh.Count = item.Count;
                 sh.Purchase_price = skladUpd.Purchase_price;
-                sh.History = hry;
+                sh.History_id =db.HistoryList().Last().History_id;
 
-                db.Sklad.Update(skladUpd);
-                db.Shipment.Add(sh);
+                db.UpdateSklad(skladUpd);
+                db.AddShipment(sh);
             }
 
 
           
            
-            db.SaveChanges();
+          //  db.SaveChanges();
             MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
             TovarsListForPostavka.tovarslist.Clear();
             TovarsListForPostavka.NumberI = 0;
@@ -80,7 +83,7 @@ namespace Kursovoi.Skladnoi
         /// <param name="e"></param>
         private void AddTovarInSP(object sender, RoutedEventArgs e)
         {
-            AddTovarInPostAsMessageBox add = new AddTovarInPostAsMessageBox(db);
+            AddTovarInPostAsMessageBox add = new AddTovarInPostAsMessageBox();
             add.Closing += Adt_Closing;
             add.ShowDialog();
 
@@ -116,6 +119,15 @@ namespace Kursovoi.Skladnoi
                 DataGridtable.ItemsSource = null;
                 TovarsListForPostavka.tovarslist.Remove(Delete);
                 TovarsListForPostavka.NumberI--;
+
+                int i = 0;
+                foreach (var item in TovarsListForPostavka.tovarslist)
+                {
+                    i++;
+                    item.Number = i;
+                }
+                TovarsListForPostavka.NumberI = i;
+
                 DataGridtable.ItemsSource = TovarsListForPostavka.tovarslist;
                 MessageBox.Show("Успешно!", "Уведомление", MessageBoxButton.OK);               
             }

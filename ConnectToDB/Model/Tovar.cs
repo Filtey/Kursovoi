@@ -24,9 +24,6 @@ namespace Kursovoi.ConnectToDB.Model
 
         [ForeignKey("id_Manufacturer")]
         public Manufacturer Manufacturer { get; set; }
-
-        public List<AutoPurchase> AutoPurchase { get; set; }
-        public List<Report> Report { get; set; }
         public List<Shipment> Shipment { get; set; }
         public List<Sklad> Sklad { get; set; }
         public List<Sell> Sell { get; set; }

@@ -562,7 +562,8 @@
                                   CalendarButtonStyle="{DynamicResource CalendarCalendarButtonStyle1}"
                                   CalendarDayButtonStyle="{DynamicResource CalendarCalendarDayButtonStyle1}" 
                                   Style="{DynamicResource CalendarStyle1}" 
-                                  FontFamily="Trebuchet MS"/>
+                                  FontFamily="Trebuchet MS"
+                                  />
                     </Viewbox>
 
 

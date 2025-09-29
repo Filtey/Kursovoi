@@ -345,7 +345,7 @@
                            Foreground="#b0b9c6"
                            IsHitTestVisible="False"
                            Panel.ZIndex="1"
-                           Text="Введите фамилию для поиска..."
+                           Text="Поиск..."
                            Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                     <TextBox x:Name="txtSearch"
                              Style="{DynamicResource textboxSearch}"

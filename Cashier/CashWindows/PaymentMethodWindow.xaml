@@ -1,0 +1,118 @@
+﻿<Window x:Class="Kursovoi.Cashier.CashWindows.PaymentMethodWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:uc="clr-namespace:Kursovoi.Auth_Registr.UserControls"
+        xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
+        xmlns:local="clr-namespace:Kursovoi.Cashier.CashWindows"
+        mc:Ignorable="d"
+        Height="300" Width="500"
+        Title="MainCashier"     
+        Icon="/Images/Sporticon.ico"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        Style="{DynamicResource WindowStyle}"
+        >
+    <Window.Background>
+        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+            <GradientStop Color="#41518f" Offset="0"/>
+            <GradientStop Color="#2c386c" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
+    <StackPanel>
+        <TextBlock Text="Выберите способ оплаты" Grid.Row="1"
+                           FontSize="32"
+                           FontWeight="SemiBold"
+                           Margin="0 20 0 0"
+                           HorizontalAlignment="Center"
+                           Foreground="#FFFFFFFF"
+                           />
+        
+        
+        <StackPanel 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Center"
+                    Margin="20 20 0 0" >
+            
+            <Border Margin="0 0 20 0" Width="200" Height="110" PreviewMouseLeftButtonUp="BeznalMethod">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                        <GradientStop Color="#827bff" Offset="0"/>
+                        <GradientStop Color="#d9b5ff" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Clip>
+                    <RectangleGeometry RadiusX="15" RadiusY="15" Rect="0,0, 200,110"/>
+                </Border.Clip>
+                <StackPanel Margin="0, 10, 0, 00" HorizontalAlignment="Center">
+                    <TextBlock Text="БЕЗНАЛИЧНЫЙ РАСЧЕТ" 
+                           Foreground="#ffffff"
+                           FontSize="14" 
+                           FontWeight="SemiBold" 
+                           TextWrapping="Wrap"/>
+                    
+                    <Image 
+                        Source="/Images/cardIcon.png"
+                           Height="80" Width="80"
+                        />
+                </StackPanel>
+            </Border>
+
+            <Border Margin="0 0 20 0" Width="200" Height="110" PreviewMouseLeftButtonUp="NalMethod">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                        <GradientStop Color="#827bff" Offset="0"/>
+                        <GradientStop Color="#d9b5ff" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Clip>
+                    <RectangleGeometry RadiusX="15" RadiusY="15" Rect="0,0, 200,110"/>
+                </Border.Clip>
+                <StackPanel Margin="0, 10, 0, 0" HorizontalAlignment="Center">
+                    <TextBlock Text="НАЛИЧНЫЙ РАСЧЕТ" 
+                           Foreground="#ffffff"
+                           FontSize="14" 
+                           FontWeight="SemiBold" 
+                           TextWrapping="Wrap"/>
+                    
+                    <Image 
+                        Source="/Images/banknoteIcon.png"
+                           Height="80" Width="80"
+                        />
+                </StackPanel>
+            </Border>
+
+
+
+          
+
+        </StackPanel>
+
+        <StackPanel Margin="20 30 0 0" HorizontalAlignment="Center">
+            <Border Margin="0 0 20 0" Width="160" Height="60" PreviewMouseLeftButtonUp="CloseWindow">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,2">
+                        <GradientStop Color="red" Offset="0"/>
+                        <GradientStop Color="Red" Offset="1"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Clip>
+                    <RectangleGeometry RadiusX="15" RadiusY="15" Rect="0,0, 160,60"/>
+                </Border.Clip>
+                <StackPanel VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <TextBlock Text="ОТМЕНА" 
+                           Foreground="#ffffff"
+                           FontSize="14" 
+                           FontWeight="SemiBold" 
+                           TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+        
+        
+    </StackPanel>
+</Window>

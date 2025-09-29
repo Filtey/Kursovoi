@@ -230,9 +230,10 @@
         <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
 
     </Window.Resources>
+
     
-    
-    <Grid>
+    <Viewbox Stretch="Fill" >
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="600"/>
@@ -244,37 +245,37 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        
-        
-        <!--left section-->
+
+            <!--left section-->
         
         
         <!--search-->
-        <Grid Width="878"  Grid.Row="0" Margin="0 30 0 0">
+        <Grid Width="1300"  Grid.Row="0" Margin="0 30 0 0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="950"/>
+                <ColumnDefinition Width="150"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="250"/>
             </Grid.ColumnDefinitions>
             
             
-            <TextBlock Margin="240 20 0 20" 
+            <TextBlock Margin="380 20 0 20" 
                            VerticalAlignment="Center"
                            Foreground="#b0b9c6"
                            IsHitTestVisible="False"
                            Panel.ZIndex="1"
                            FontSize="20"
-                           Text="Введите артикул товара для поиска..."
+                           Text="Введите артикул или наименование товара для поиска..."
                            Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
             <TextBox x:Name="txtSearch"
                              Style="{DynamicResource textboxSearch}"
                              TextChanged="SearchTextBox"
-                             Width="400"
-                             Margin="220 0 0 0"/>
+                             Width="570"
+                             Margin="345 0 0 0"/>
             <fa:IconImage Icon="Search" Style="{DynamicResource menuButtonIcon}"
                                   Width="15"
                                   Height="15"
                                   VerticalAlignment="Center"
-                                  Margin="0 0 15 0"
+                                  Margin="0 0 30 0"
                                   Foreground="#b0b9c6"
                                   HorizontalAlignment="Right"/>
 
@@ -285,17 +286,38 @@
                         Height="60"
                         FontWeight="DemiBold"
                         FontSize="20"
-                        Margin="20,2,0,0"
+                        Margin="10,2,0,0"
                         x:Name="backButton"
                         Background="#b298fd"
                         Click="Back"
                         Visibility="Hidden">
                 <StackPanel Orientation="Horizontal">
                     <fa:IconImage Icon="Backward"
-                                  Width="12" 
+                                  Width="20" 
                                   Foreground="#ffffff"
                                   Margin="0 3 10 0"/>
                     <TextBlock Text="Назад"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{DynamicResource addButton}"
+                        Width="140"
+                        HorizontalAlignment="Left"
+                        Grid.Column="2"
+                        Height="60"
+                        FontWeight="DemiBold"
+                        FontSize="20"
+                        Margin="50,2,0,0"
+                        x:Name="RefundButton"
+                        Background="#b298fd"
+                        Click="RefundClick"
+                        Visibility="Visible">
+                <StackPanel Orientation="Horizontal">
+                    <fa:IconImage Icon="MoneyBillTransfer"
+                                  Width="20" 
+                                  Foreground="#ffffff"
+                                  Margin="0 3 10 0"/>
+                    <TextBlock Text="Возврат"/>
                 </StackPanel>
             </Button>
         </Grid>
@@ -308,6 +330,7 @@
             <DataGrid x:Name="ListTovarsdg"
                       Height="0"
                       Visibility="Hidden"
+                      Width="1300"
                       Style="{DynamicResource DataGridStyle1}" 
                       CellStyle="{DynamicResource DataGridCellStyle1}" 
                       ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
@@ -332,7 +355,7 @@
                                     <Border Width="25" Height="25" CornerRadius="50" Margin="0 0 10 0" Background="{Binding BgColor}">
                                         <TextBlock Text="{Binding NameTovar}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="0 0 0 1"/>
                                     </Border>
-                                    <TextBlock Text="{Binding sklad.Tovar.Name}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding tovar.Name}" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -505,14 +528,29 @@
             <!--крестик в углу для закрытия окна-->
             <StackPanel VerticalAlignment="Top" Grid.Row="0"
                                >
-                <Image  Source="/Images/close.png" 
+                    <Image  Source="/Images/close.png" 
+                          ToolTipService.InitialShowDelay="100"
                             Width="20"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Right"
                             Margin="0 30 10 0"                        
                             Style="{DynamicResource iconApp}"
-                            MouseLeftButtonDown="ExitApp"/>
-            </StackPanel>
+                            MouseLeftButtonDown="ExitApp">
+                        <Image.ToolTip>
+                            <ToolTip Background="#60AA4030" 
+                                     Foreground="White" 
+                                     HasDropShadow="False"
+                                     Placement="Relative"
+                                     
+                                     HorizontalOffset="15"
+                                     VerticalOffset="20">
+                                <StackPanel>
+                                    <TextBlock FontSize="16">Закрыть смену</TextBlock>
+                                </StackPanel>
+                            </ToolTip>
+                        </Image.ToolTip>
+                    </Image>
+                </StackPanel>
             <Border BorderBrush="Black" 
                     BorderThickness="2" 
                     Margin="0, 100, 0, 200">
@@ -521,7 +559,7 @@
                  CellStyle="{DynamicResource DataGridCellStyle1}" 
                  ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" 
                  RowStyle="{DynamicResource DataGridRowStyle1}" 
-                 Height="452" 
+                 Height="802" 
                  VerticalAlignment="Top"
                  x:Name="OrderListLbx"
                  HorizontalScrollBarVisibility="Auto"
@@ -534,14 +572,14 @@
                     <DataGridTextColumn Header="#" 
                                         IsReadOnly="True"
                                         CanUserResize="False"
-                                        Width="50"
+                                        Width="54"
                                         FontSize="16"
                                         Binding="{Binding Number}"/>
 
                     <DataGridTemplateColumn Header="Артикул" IsReadOnly="True" Width="83">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding sklad.Tovar.Artikul}" FontSize="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding tovar.Artikul}" FontSize="16" VerticalAlignment="Center"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -550,7 +588,7 @@
                                         IsReadOnly="True"
                                         Width="200"
                                         FontSize="16"
-                                        Binding="{Binding sklad.Tovar.Name}"/>
+                                        Binding="{Binding tovar.Name}"/>
 
                     <DataGridTextColumn Header="Цена(руб.)" 
                                         IsReadOnly="True"
@@ -580,17 +618,7 @@
             </DataGrid>
             </Border>
 
-            <StackPanel>
-                <Label 
-                       FontWeight="SemiBold" 
-                       FontSize="30"
-                       x:Name="CountLabel"
-                       Content="Итоговая сумма: "
-                       Foreground="Black"
-                       HorizontalAlignment="Left"
-                       Margin="20 890 0 0"
-                       />
-            </StackPanel>
+            
 
             <StackPanel>
                 <Label 
@@ -604,17 +632,30 @@
                        />
             </StackPanel>
 
-            
-            <StackPanel HorizontalAlignment="Center"
+                <StackPanel 
                         VerticalAlignment="Bottom" 
-                        Height="150"
+                        Height="190" >
+                    
+                    <StackPanel HorizontalAlignment="Left"
+                                Margin="40 0 0 10">
+                        <Label 
+                       FontWeight="SemiBold" 
+                       FontSize="30"
+                       x:Name="CountLabel"
+                       Content="Итоговая сумма: "
+                       Foreground="Black"
+                       HorizontalAlignment="Left"
+                       />
+                    </StackPanel>
+                    <StackPanel 
+                        HorizontalAlignment="Center"
                         Orientation="Horizontal">
                 
                 <Button Style="{DynamicResource addButton}"
                         Width="150"
                         Height="100"
                         Click="SellOrders"
-                        Margin="0 10 30 10"
+                        Margin="0 10 30 0"
                         Background="Green"
                         FontWeight="DemiBold">
                     <StackPanel Orientation="Horizontal">
@@ -628,7 +669,7 @@
                         Width="150"
                         Height="100"
                         Click="CancelOrders"
-                        Margin="0 10 0 10"
+                        Margin="0 10 0 0"
                         Background="Red"
                         FontWeight="DemiBold">
                     <StackPanel Orientation="Horizontal">
@@ -637,12 +678,13 @@
                                    />
                     </StackPanel>
                 </Button>
+                </StackPanel>
             </StackPanel>
 
 
         </Grid>
-        
-        
 
-    </Grid>
+
+        </Grid>
+    </Viewbox>
 </Window>

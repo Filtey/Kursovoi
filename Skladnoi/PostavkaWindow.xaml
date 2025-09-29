@@ -7,7 +7,11 @@
         xmlns:fa="http://schemas.awesome.incremented/wpf/xaml/fontawesome.sharp"
         xmlns:uc="clr-namespace:Kursovoi.Auth_Registr.UserControls"
         mc:Ignorable="d"
-        Title="AddTovar" Height="800" Width="900" Background="Transparent" WindowStyle="None"
+        Title="Поставка"
+        Height="800"
+        Width="900"
+        Background="Transparent" 
+        WindowStyle="None"
         AllowsTransparency="True" WindowStartupLocation="CenterScreen"
         Icon="../Images/Sporticon.ico"
         Style="{DynamicResource WindowStyle}">

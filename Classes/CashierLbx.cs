@@ -11,6 +11,7 @@ namespace Kursovoi.Classes
     {
         public int Number { get; set; }
         public Sklad sklad { get; set; }
+        public Tovar tovar { get; set; }
         public int Price { get; set; }
         public int Count { get; set; }
     }

@@ -345,13 +345,13 @@
 
 
                 <!--search textbox-->
-                <Grid Width="500"  HorizontalAlignment="Center" Grid.Row="4">
+                <Grid Width="600"  HorizontalAlignment="Center" Grid.Row="4">
                     <TextBlock Margin="20 0" 
                            VerticalAlignment="Center"
                            Foreground="#b0b9c6"
                            IsHitTestVisible="False"
                            Panel.ZIndex="1"
-                           Text="Введите артикул товара, чтобы узнать, в каких поставках он содержится..."
+                           Text="Введите артикул или наименование товара для вывода поставкок, в которых он содержится..."
                            Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
                     <TextBox x:Name="txtSearch"
                              Style="{DynamicResource textboxSearch}"
@@ -521,7 +521,7 @@
                                             CanUserResize="False"
                                             FontSize="16"
                                             Width="140"                                            
-                                            Binding="{Binding shipment.Tovar.Artikul}"/>
+                                            Binding="{Binding tovar.Artikul}"/>
 
 
                         <DataGridTextColumn Header="Наименование товара" 
@@ -529,7 +529,7 @@
                                             CanUserResize="False"
                                             FontSize="16"
                                             Width="300"
-                                            Binding="{Binding shipment.Tovar.Name}"/>
+                                            Binding="{Binding tovar.Name}"/>
                         
                         
                         <DataGridTextColumn Header="Кол-во" 

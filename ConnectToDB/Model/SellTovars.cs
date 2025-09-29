@@ -15,7 +15,10 @@ namespace Kursovoi.ConnectToDB.Model
         public int SellTovars_id { get; set; }
         public int Kassir_id { get; set; }
         public DateTime Date_sell { get; set; }
-       
+        public string PaymentId { get; set; }
+        public int Summary { get; set; }
+
+
         [ForeignKey("Kassir_id")]
         public Account Account { get; set; }
         public List<Sell> sell { get; set; }

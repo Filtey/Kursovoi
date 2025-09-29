@@ -23,7 +23,7 @@ namespace Kursovoi.Auth_Registr
     /// </summary>
     public partial class Register : Window
     {
-        DataContext db = new DataContext();
+      //  DataContext db = new DataContext();
         public Register()
         {
             InitializeComponent();
@@ -77,13 +77,22 @@ namespace Kursovoi.Auth_Registr
         /// </summary>
         private void SNFTextInput(object sender, TextCompositionEventArgs e)
         {
-            MyTextBox mt = sender as MyTextBox;
-          
-            if (!char.IsLetter(char.Parse(e.Text)) || mt.textBox.Text.Length >= 20) //если не буква
+            try
             {
-                e.Handled = true;
+                MyTextBox mt = sender as MyTextBox;
+
+                if (!char.IsLetter(char.Parse(e.Text)) || mt.textBox.Text.Length >= 20) //если не буква
+                {
+                    e.Handled = true;
+                }
+                mt.textBox.Text = mt.textBox.Text.Replace(" ", "");
             }
-            mt.textBox.Text = mt.textBox.Text.Replace(" ", "");          
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
 
@@ -92,19 +101,28 @@ namespace Kursovoi.Auth_Registr
         /// </summary>
         private void PhoneTextInput(object sender, TextCompositionEventArgs e)
         {
-            string[] number = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-          
-            if (e.Text == "+" && PhoneTextbox.textBox.Text.Length == 0) { } //если в начале ввели +
-            else
+            try
             {
-                if (!number.Contains(e.Text))//если не цифра
+                string[] number = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+                if (e.Text == "+" && PhoneTextbox.textBox.Text.Length == 0) { } //если в начале ввели +
+                else
                 {
-                    e.Handled = true;
+                    if (!number.Contains(e.Text))//если не цифра
+                    {
+                        e.Handled = true;
+                    }
+                    else if (PhoneTextbox.textBox.Text.Length >= 12) //длина номера макс 13 вместе со знаком +
+                    {
+                        e.Handled = true;
+                    }
                 }
-                else if (PhoneTextbox.textBox.Text.Length >= 12) //длина номера макс 13 вместе со знаком +
-                {
-                    e.Handled = true;
-                }
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
         }
 
@@ -114,47 +132,64 @@ namespace Kursovoi.Auth_Registr
         /// </summary>
         private void ChooseGender(object sender, MouseButtonEventArgs e)
         {
-            if (sender as MyOption == MaleIcon)
+            try
             {
-                MaleIcon.ImgIconButton.Background = new SolidColorBrush(Colors.Black);
-                FemaleIcon.ImgIconButton.Background = new SolidColorBrush(Color.FromRgb(198, 198, 198));
-            }
+                if (sender as MyOption == MaleIcon)
+                {
+                    MaleIcon.ImgIconButton.Background = new SolidColorBrush(Colors.Black);
+                    FemaleIcon.ImgIconButton.Background = new SolidColorBrush(Color.FromRgb(198, 198, 198));
+                }
 
-            else
+                else
+                {
+                    MaleIcon.ImgIconButton.Background = new SolidColorBrush(Color.FromRgb(198, 198, 198));
+                    FemaleIcon.ImgIconButton.Background = new SolidColorBrush(Colors.Black);
+                }
+            }
+            catch (Exception ee)
             {
-                MaleIcon.ImgIconButton.Background = new SolidColorBrush(Color.FromRgb(198, 198, 198));
-                FemaleIcon.ImgIconButton.Background = new SolidColorBrush(Colors.Black);
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
         }
 
         private void RegistrationAccount(object sender, RoutedEventArgs e)
-        { 
-            
-            //проверяем почту
-            var Email = EmailTextbox.textBox.Text;
-
-            string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
-           
-            if (!Regex.IsMatch(Email, pattern)) //почта невалидна
+        {
+            try
             {
-               MessageBox.Show("Недействительный адрес эл.почты!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                //проверяем почту
+                var Email = EmailTextbox.textBox.Text;
+
+                string pattern = @"\A(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)\Z";
+
+                if (!Regex.IsMatch(Email, pattern)) //почта невалидна
+                {
+                    MessageBox.Show("Недействительный адрес эл.почты!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+
+                else//почта валидна
+                {
+                    if (BirthdayTextbox.SelectedDate == null) //если не выбрана дата рождения
+                    {
+                        MessageBox.Show("Введите дату рождения!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    if (BirthdayTextbox.SelectedDate.Value >= DateTime.Now.AddYears(-18)) //если возраст меньше 18, то ошибка
+                    {
+                        MessageBox.Show("Приложением могут пользоваться лица, достигшие возраста 18 лет!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                }
             }
-
-
-            else//почта валидна
+            catch (Exception ee)
             {
-                if(BirthdayTextbox.SelectedDate == null) //если не выбрана дата рождения
-                {
-                    MessageBox.Show("Введите дату рождения!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-                if(BirthdayTextbox.SelectedDate.Value >= DateTime.Now.AddYears(-18)) //если возраст меньше 18, то ошибка
-                {
-                    MessageBox.Show("Приложением могут пользоваться лица, достигшие возраста 18 лет!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-               
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
 
         }

@@ -512,24 +512,26 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
 
 
 
 
-                            <TextBlock TextWrapping="Wrap" Grid.Row="1" Text="Артикул" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="2" Text="Наименование товара" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="3" Text="Гарантия от производителя(мес.)" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="4" Text="Дата производства" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="5" Text="Тип товара" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="6" Text="Изготовитель" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="7" Text="Годен до (если имеется)" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="8" Text="Закупочная цена(руб.)" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="9" Text="Цена продажи(руб.)" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="10" Text="Единица измерения" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="11" Text="Количество на складе" Style="{DynamicResource text}"/>
-                            <TextBlock TextWrapping="Wrap" Grid.Row="12" Text="Комментарий (необязательно)" Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="1" Text="Артикул"                          Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="2" Text="Наименование товара"              Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="3" Text="Гарантия от производителя(мес.)"  Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="4" Text="Дата производства"                Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="5" Text="Тип товара"                       Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="6" Text="Изготовитель"                     Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="7" Text="Годен до (если имеется)"          Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="8" Text="Закупочная цена(руб.)"            Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="9" Text="Цена продажи(руб.)"               Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="10" Text="Единица измерения"               Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="11" Text="Введите единицу измерения"       Style="{DynamicResource text}" x:Name="UnitLabel" Visibility="Collapsed"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="12" Text="Количество на складе"            Style="{DynamicResource text}"/>
+                            <TextBlock TextWrapping="Wrap" Grid.Row="13" Text="Комментарий (необязательно)"     Style="{DynamicResource text}"/>
 
                             <uc:MyTextBox Grid.Column="1" Grid.Row="1" Hint=" 123456" Width="230" 
                                   PreviewTextInput="NumbersTextInput"
@@ -567,7 +569,7 @@
                                 </ComboBox>
                             </StackPanel>
 
-                            <uc:MyTextBox Grid.Column="1" Grid.Row="12"
+                            <uc:MyTextBox Grid.Column="1" Grid.Row="13"
                                   Hint=" Комментарий"
                                   x:Name="CommentTextbox"                                  
                                    />
@@ -592,8 +594,40 @@
                                   x:Name="SellPriceTextbox"                                  
                                   />
 
-                            <uc:MyTextBox Grid.Column="1" Grid.Row="10"
+
+                            <ComboBox Grid.Column="1"
+                                      Grid.Row="10"
+                                      Height="30"
+                                      Padding="10,5,0,0" 
+                                      IsReadOnly="False"
+                                      SelectionChanged="SelectedUnitType"
+                                      x:Name="UnitCheckbox">
+                                <ComboBoxItem  Content="шт." IsSelected="True"/>
+                                <ComboBoxItem  Content="упак."/>
+                                <ComboBoxItem  Content="пара"/>
+                                <ComboBoxItem  Content="комплект"/>
+                                <Separator/>
+                                <ComboBoxItem  Content="гр."/>
+                                <ComboBoxItem  Content="кг."/>
+                                <ComboBoxItem  Content="т."/>
+                                <Separator/>
+                                <ComboBoxItem  Content="мл."/>
+                                <ComboBoxItem  Content="л."/>
+                                <Separator/>
+                                <ComboBoxItem  Content="мм."/>
+                                <ComboBoxItem  Content="см."/>
+                                <ComboBoxItem  Content="м."/>
+                                <ComboBoxItem  Content="км."/>
+                                <Separator/>
+                                <ComboBoxItem  Content="см2"/>
+                                <ComboBoxItem  Content="м2"/>
+                                <Separator/>
+                                <ComboBoxItem  Content="другое..."/>
+                              
+                            </ComboBox>
+                            <uc:MyTextBox Grid.Column="1" Grid.Row="11"
                                   Hint=" шт."
+                                  Visibility="Collapsed"
                                   x:Name="UnitTextbox"                                  
                                   />
 
@@ -615,12 +649,12 @@
                             </StackPanel>
 
 
-                            <uc:MyTextBox Grid.Column="1" Grid.Row="11" Hint=" 12" Width="230" 
+                            <uc:MyTextBox Grid.Column="1" Grid.Row="12" Hint=" 12" Width="230" 
                                   x:Name="CountTextbox"
                                   PreviewTextInput="NumbersTextInput"/>
 
                             <!--кнопки-->
-                            <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="13" Margin="0 20 0 0">
+                            <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="14" Margin="0 20 0 0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>

@@ -24,6 +24,7 @@ namespace Kursovoi.Classes
 
         public SellTovars sellTovars { get; set; }
         public Sell sell { get; set; }
+        public Tovar tovar { get; set; }
         public int Number { get; set; }
         public string FIO { get; set; }
         public Brush BgColor { get; set; }

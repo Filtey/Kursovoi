@@ -22,7 +22,7 @@ namespace Kursovoi.Classes
 {
     public class HistorySkladnoiClass
     {
-        public History history { get; set; }
+        public History history { get; set; }     
         public int Number { get; set; }
         public Brush BgColor { get; set; }
     }

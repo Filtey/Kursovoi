@@ -12,6 +12,8 @@
     <None Remove="Images\accessory.png" />
     <None Remove="Images\addTovarIcon.png" />
     <None Remove="Images\alpine skiing.png" />
+    <None Remove="Images\banknoteIcon.png" />
+    <None Remove="Images\cardIcon.png" />
     <None Remove="Images\children.png" />
     <None Remove="Images\close.png" />
     <None Remove="Images\closewhite.png" />
@@ -22,6 +24,7 @@
     <None Remove="Images\img.png" />
     <None Remove="Images\manuf.png" />
     <None Remove="Images\martialarts.png" />
+    <None Remove="Images\openShift.png" />
     <None Remove="Images\pool.png" />
     <None Remove="Images\run.png" />
     <None Remove="Images\ski.png" />
@@ -45,6 +48,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\alpine skiing.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\banknoteIcon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\cardIcon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\close.png">
@@ -72,6 +81,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\martialarts.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\openShift.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\pool.png">
@@ -124,15 +136,23 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="FontAwesome.Sharp" Version="6.1.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="MahApps.Metro.IconPacks.Material" Version="4.11.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0-preview1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.1823.32" />
     <PackageReference Include="MySql.Data" Version="8.0.31" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.2.0-rc.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
+    <PackageReference Include="Yandex.Checkout.V3" Version="1.7.0" />
   </ItemGroup>
 
 </Project>

@@ -16,6 +16,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
 using Kursovoi.Classes;
+using Kursovoi.ConnectToDB.Model.ApiCRUDs;
+using Npgsql;
 
 namespace Kursovoi.Auth_Registr
 {
@@ -24,51 +26,29 @@ namespace Kursovoi.Auth_Registr
     /// </summary>
     public partial class Reg_Auth : Window
     {
-        private DataContext db;
         int Acctype; //1-складной, 2-финансовый работник, 3-кассир, 4-админ
-        Autorization auth = null;
+        Autorization? auth = null;
+        APIClass api;
+
         public Reg_Auth()
         {
             InitializeComponent();
-
-            UsTbx.GotFocus += RemoveText;
-            UsTbx.LostFocus += AddText;
-            PasswTbx.GotFocus += RemoveTextPassword;
-            PasswTbx.LostFocus += AddTextPassword;
-            //    Autorization auth = database.Autorization.FirstOrDefault(x => x.Login == "abc" && x.Password == "12aaabc");
-
-            // if(auth != null)   auth.Password = "1aaabc";
-            //     database.SaveChanges();
-        
-            
-            
-            
-            //  db = new DataContext();
-            //  Autorization logpas = db.Autorization.Where(x => x.Account_id == 13).First();
-
-            //#region шифрование
-            //byte[] key, iv;
-            //Rijndael myRijndael = Rijndael.Create();
-            //key = myRijndael.Key;
-            //iv = myRijndael.IV;
-            //byte[] encrypted = Hashing.EncryptStringToBytes("password5", myRijndael.Key, myRijndael.IV);
-            //string zapic = System.Text.Encoding.Default.GetString(encrypted);
-            //zapic += "RRRR" + System.Text.Encoding.Default.GetString(key); //32
-            //zapic += "FFFF" + System.Text.Encoding.Default.GetString(iv);  //16
-
-            //byte[] zapic2 = System.Text.Encoding.Default.GetBytes(zapic);
-            //#endregion
-
-            //zapic = Encoding.UTF8.GetString(zapic2);
-            ////\0\\^�0�{��X��&��RRRR\u0015��?ol�.Yз���\nS�1�s��_���u-�\u000fk�FFFF�\r7�\u0003\u001b&!��L\u0014�:��
-            //logpas.Password = zapic;
-
-            //db.Autorization.Update(logpas);
-            //db.SaveChanges();
-
-
-
-
+            try
+            {
+                UsTbx.GotFocus += RemoveText;
+                UsTbx.LostFocus += AddText;
+                PasswTbx.GotFocus += RemoveTextPassword;
+                PasswTbx.LostFocus += AddTextPassword;
+                api = new APIClass();
+                // UsTbx.Text = "login2";
+                //PasswTbx.Password = "password2";
+                //LoginClick(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
 
@@ -124,22 +104,24 @@ namespace Kursovoi.Auth_Registr
         private void LoginClick(object sender, RoutedEventArgs e)
         {
             //авторизация
-
-             string log = UsTbx.Text;
+            string log = UsTbx.Text;
              string pass = Hashing.hashPassword(PasswTbx.Password);
 
-          //  string log = "login4";
-          //  string pass = Hashing.hashPassword("password4");
-
+            //  string log = "login4";
+            //  string pass = Hashing.hashPassword("password4");
+         
             string otvet = "Неверные учётные данные!";
            
             try
             {
-                db = new DataContext();
-
-                List<Account> acc = db.Account.ToList();
+                api = new APIClass();
+             
+                // db = new DataContext();
+              
+                List<Account> acc = api.AccountList();
                 //  db = new DataContext();
-                auth = db.Autorization.FirstOrDefault(x => x.Login == log && x.Password == pass); 
+                var bb = api.AutorizationList();
+                auth = api.AutorizationList().FirstOrDefault(x => x.Login == log && x.Password == pass);
 
 
                 if (auth == null)
@@ -150,63 +132,73 @@ namespace Kursovoi.Auth_Registr
                 else
                 {
                     Acctype = int.Parse(auth.Account_type.ToString());
+
                 }
+                //анимация для исчезновения
+                DoubleAnimation logAnim = new DoubleAnimation();
+                logAnim.From = 1;
+                logAnim.To = 0;
+                logAnim.Duration = TimeSpan.FromSeconds(0.9);
+                logAnim.Completed += logAnim_Completed;
+                BeginAnimation(Window.OpacityProperty, logAnim);
+                
             }
 
-            catch (System.InvalidOperationException ee)
+            catch (Exception ee)
             {
                 var c = ee.Message;
                 MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-
-            //анимация для исчезновения
-            DoubleAnimation logAnim = new DoubleAnimation();
-            logAnim.From = 1;
-            logAnim.To = 0;
-            logAnim.Duration = TimeSpan.FromSeconds(0.9);
-            logAnim.Completed += logAnim_Completed;
-            BeginAnimation(Window.OpacityProperty, logAnim);
         }
-
 
 
         //после исчезновения окна закрываем его и открываем окно после входа
         private void logAnim_Completed(object sender, EventArgs e)
         {
-            if (Acctype == 1) //Skladnoi (работник склада)
+            try
             {
-                var skladnoiAcc = auth.Account;
-                Skladnoi.MainSkladnoi sk = new Skladnoi.MainSkladnoi(skladnoiAcc);
-                this.Close();
-                sk.Show();
+                if (Acctype == 1) //Skladnoi (работник склада)
+                {
+                    var skladnoiAcc = api.AccountList().Where(x => x.Account_id == auth.Account_id).First();
+                    Skladnoi.MainSkladnoi sk = new Skladnoi.MainSkladnoi(skladnoiAcc);
+                    this.Close();
+                    sk.Show();
 
+                }
+
+                else if (Acctype == 2) //финансовый работник
+                {
+                    var finAcc = api.AccountList().Where(x => x.Account_id == auth.Account_id).First();
+                    Finance.FinWindows.FinMain fin = new Finance.FinWindows.FinMain(finAcc);
+                    this.Close();
+                    fin.Show();
+
+                }
+
+                else if (Acctype == 3) //Кассир
+                {
+
+                    var kassirAcc = api.AccountList().Where(x => x.Account_id == auth.Account_id).First();
+                    Cashier.CashWindows.MainCashier mainCashier = new Cashier.CashWindows.MainCashier(kassirAcc);
+                    this.Close();
+                    mainCashier.Show();
+                }
+
+                else if (Acctype == 4) //администратор
+                {
+                    var adminAcc = api.AccountList().Where(x => x.Account_id == auth.Account_id).First();
+                    Admin.Windows.MainAdmin adm = new Admin.Windows.MainAdmin(adminAcc);
+                    this.Close();
+                    adm.Show();
+                }
             }
-
-            else if (Acctype == 2) //финансовый работник
+            catch (Exception ee)
             {
-                var finAcc = auth.Account;
-                Finance.FinWindows.FinMain fin = new Finance.FinWindows.FinMain(finAcc);
-                this.Close();
-                fin.Show();
-
-            }
-
-            else if (Acctype == 3) //Кассир
-            {
-                var kassirAcc = auth.Account;
-                Cashier.CashWindows.MainCashier mainCashier = new Cashier.CashWindows.MainCashier(kassirAcc);
-                this.Close();
-                mainCashier.Show();
-            }
-
-            else if (Acctype == 4) //администратор
-            {               
-                var adminAcc = auth.Account;
-                Admin.Windows.MainAdmin adm = new Admin.Windows.MainAdmin(adminAcc);
-                this.Close();
-                adm.Show();
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
             }
         }
 
@@ -241,5 +233,26 @@ namespace Kursovoi.Auth_Registr
         {
             System.Windows.Application.Current.Shutdown();
         }
+
+      
+        private void HideAndViewPassword_PreviewKeyUp(object sender, MouseButtonEventArgs e)
+        {
+            if (HideAndViewPassword.Kind == MahApps.Metro.IconPacks.PackIconMaterialKind.Eye)
+            {
+                PasswTbx.Password = pwdTextBox.Text;
+                HideAndViewPassword.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.EyeOff;
+                pwdTextBox.Visibility = Visibility.Collapsed;
+                PasswTbx.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                pwdTextBox.Text = PasswTbx.Password;
+                HideAndViewPassword.Kind = MahApps.Metro.IconPacks.PackIconMaterialKind.Eye;
+                pwdTextBox.Visibility = Visibility.Visible;
+                PasswTbx.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void HideAndViewPassword_Click(object sender, RoutedEventArgs e) => HideAndViewPassword_PreviewKeyUp(null, null);
     }
 }
