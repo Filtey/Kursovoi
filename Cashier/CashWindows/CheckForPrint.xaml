@@ -73,7 +73,7 @@
                         <StackPanel Grid.Column="1" Margin="0">
                             <TextBlock x:Name="CashierName" FontSize="12" Margin="5" HorizontalAlignment="Right"/>
                             <TextBlock Text="г. Екатеринбург, ул. 8 Марта, 46 (ТЦ Гринвич, этаж 2)" FontSize="12" Margin="5" HorizontalAlignment="Right"/>
-                            <TextBlock x:Name="paymentIdentificator"  FontSize="11" Margin="0, 5, 5, 5" HorizontalAlignment="Right"/>
+                            <TextBlock x:Name="paymentIdentificator" TextWrapping="Wrap"  FontSize="11" Margin="0, 5, 5, 5" HorizontalAlignment="Right"/>
                            </StackPanel>
                     </Grid>
 
@@ -193,7 +193,7 @@
                             <TextBlock Text="Спасибо Вам!" VerticalAlignment="Center" FontSize="20" Margin="5" FontWeight="Light"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                            <TextBlock Text="e-commerce@sportmaster.ru" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
+                            <TextBlock Text="erik89826502855@gmail.com" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
                             <TextBlock Text="8 (800) 777-77-71" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
                             <TextBlock Text="www.sportmaster.ru" VerticalAlignment="Center" FontSize="8" Margin="5" FontWeight="Light"/>
                         </StackPanel>
@@ -256,12 +256,6 @@
                        FontSize="24"
                        Margin="10"/>
                 
-                
-                <Label Content="Проверка устройств вывода...ОК"
-                       FontSize="24"
-                       Margin="10"/>
-
-
                 <Label Content="***СМЕНА ОТКРЫТА***"
                        FontSize="24"
                        HorizontalAlignment="Center"

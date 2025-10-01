@@ -111,6 +111,7 @@ namespace StoreSystem.Skladnoi.Pages
                 //добавление товаров в список (из листа в обсерабл)
                 var local = s;
                 Random rnd = new Random();
+                if (local == null) return;
                 foreach (var item in local)
                 {
                     var tovar = t.First(x => x.Tovar_id == item.Tovar_id);
@@ -149,7 +150,8 @@ namespace StoreSystem.Skladnoi.Pages
         {
             try
             {
-                AddTovar adt = new AddTovar();
+                //из экселя или вручную
+                ImportInFileOrHandWindow adt = new ImportInFileOrHandWindow();
                 adt.Closing += Adt_Closing;
                 adt.ShowDialog();
             }

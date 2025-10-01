@@ -98,12 +98,13 @@ namespace StoreSystem.Skladnoi.Pages
                 //добавление товаров в список (из листа в обсерабл)
                 string stat = "";
                 var local = his;
+                if (local == null) return;
                 Random rnd = new Random();
                 int i = 0;
                 foreach (var item in local)
                 {
 
-
+                    item.Date = item.Date.AddHours(5);
                     i++;
                     history.Add(new HistorySkladnoiClass
                     {

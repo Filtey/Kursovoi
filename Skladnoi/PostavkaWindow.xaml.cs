@@ -46,7 +46,7 @@ namespace StoreSystem.Skladnoi
                 MessageBox.Show("В списке поставленных товаров ничего нет!", "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-            History hry = new History { Date = DateTime.Now };
+            History hry = new History { Date = DateTime.Now.ToUniversalTime() };
             db.AddHistory(hry);
             foreach (var item in TovarsListForPostavka.tovarslist)
             { 

@@ -13,10 +13,16 @@ namespace StoreSystem.ConnectToDB.Model
     {
         [Key]
         public int Shift_id { get; set; }
+      
+        
         [Column(TypeName = "date")]
         public DateTime Date_Start { get; set; }
+       
+        
         [Column(TypeName = "date")]
         public DateTime Date_End { get; set; }
+       
+        
         public int Cashier_id { get; set; }
         public int Summary { get; set; }
      

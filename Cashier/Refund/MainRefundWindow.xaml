@@ -351,18 +351,18 @@
 
 
                     <!--search textbox-->
-                    <Grid Width="550"  HorizontalAlignment="Center" Grid.Row="4">
-                        <TextBlock Margin="20 0" 
+                <Grid Width="550"  HorizontalAlignment="Center" Grid.Row="4">
+                    <TextBlock Margin="20 0" 
                            VerticalAlignment="Center"
                            Foreground="#b0b9c6"
                            IsHitTestVisible="False"
                            Panel.ZIndex="1"
                            Text="Введите артикул или наименование товара, чтобы узнать, в каких чеках он содержится..."
                            Visibility="{Binding ElementName=txtSearch, Path=Text.IsEmpty, Converter={StaticResource BoolToVis}}"/>
-                        <TextBox x:Name="txtSearch"
+                    <TextBox x:Name="txtSearch"
                              Style="{DynamicResource textboxSearch}"
                              TextChanged="SearchTextBox"/>
-                        <fa:IconImage Icon="Search" Style="{DynamicResource menuButtonIcon}"
+                    <fa:IconImage Icon="Search" Style="{DynamicResource menuButtonIcon}"
                                   Width="15"
                                   Height="15"
                                   VerticalAlignment="Center"
@@ -370,15 +370,9 @@
                                   Foreground="#b0b9c6"
                                   HorizontalAlignment="Right"/>
 
-                    </Grid>
+                </Grid>
 
-
-
-
-
-
-
-                    <TextBlock Text="Результатов: 55" 
+                <TextBlock Text="Результатов: 0" 
                                Grid.Row="5"
                                x:Name="CountRezultTbx" 
                                FontSize="26"

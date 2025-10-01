@@ -1,0 +1,58 @@
+﻿<Window x:Class="StoreSystem.Skladnoi.ImportInFileOrHandWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StoreSystem.Skladnoi"
+        mc:Ignorable="d"
+        Title="Импорт из файла или вручную"
+        Height="100" Width="300"
+        Background="Transparent" WindowStyle="None"
+        AllowsTransparency="True" WindowStartupLocation="CenterScreen"
+        Icon="../Images/Sporticon.ico"
+        Style="{DynamicResource WindowStyle}">
+    <Border
+          Padding="20"
+          Background="LightGray"
+          CornerRadius="25"
+          MouseDown="Border_MouseDown"
+             >
+
+        <Grid>
+
+            <StackPanel>
+                <Label Content="Как вы хотите занести информацию?" 
+                       VerticalAlignment="Top"
+                       FontSize="13"
+                       HorizontalAlignment="Center"
+                       FontWeight="SemiBold"
+                       Foreground="#121518"/>
+
+
+                <!--кнопки-->
+                <Grid Margin="10 0 10 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Content="Вручную"
+                             Margin="0 0 10 0"
+                             Height="30"
+                             Style="{DynamicResource buttonMain}"
+                             Click="HandButtonClick"/>
+
+                    <Button Content="Из файла"
+                             Margin="10 0 0 0" 
+                             Grid.Column="1"
+                             Height="30"
+                             Click="FileButtonClick"
+                             Style="{DynamicResource buttonMainGreen}"/>
+
+                </Grid>
+
+
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

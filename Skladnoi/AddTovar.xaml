@@ -563,6 +563,7 @@
                                   IsReadOnly="False"
                                   IsEditable="True"
                                   Width="230"
+                                  Style="{DynamicResource ComboBoxFlatStyle}"
                                   StaysOpenOnEdit="True"
                                   SelectionChanged="SelectedTovarType">
 
@@ -600,6 +601,7 @@
                                       Height="30"
                                       Padding="10,5,0,0" 
                                       IsReadOnly="False"
+                                      Style="{DynamicResource ComboBoxFlatStyle}"
                                       SelectionChanged="SelectedUnitType"
                                       x:Name="UnitCheckbox">
                                 <ComboBoxItem  Content="шт." IsSelected="True"/>
@@ -642,6 +644,7 @@
                                   IsReadOnly="False"
                                   IsEditable="True"
                                   Width="230"
+                                  Style="{DynamicResource ComboBoxFlatStyle}"
                                   StaysOpenOnEdit="True"
                                   SelectionChanged="SelectedManufacturerType">
 

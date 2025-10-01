@@ -56,20 +56,20 @@ namespace StoreSystem.ConnectToDB.Model.ApiCRUDs
         {
            try
            { 
-           // HttpResponseMessage response = client.GetAsync("api/ListOfReceipts").Result;
-            var response = client.PostAsJsonAsync("api/ListOfReceipts", forRefund).Result;
-
-            if (response.IsSuccessStatusCode)
-            {
-                var rez = response.Content.ReadAsStringAsync().Result;
-
-                return rez;
-            }
-            else
-            {
-                MessageBox.Show("Код ошибки:" + response.StatusCode + " : Сообщение - " + response.ReasonPhrase, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
-                return null;
-            }
+                // HttpResponseMessage response = client.GetAsync("api/ListOfReceipts").Result;
+                 var response = client.PostAsJsonAsync("api/ListOfReceipts", forRefund).Result;
+               
+                 if (response.IsSuccessStatusCode)
+                 {
+                     var rez = response.Content.ReadAsStringAsync().Result;
+               
+                     return rez;
+                 }
+                 else
+                 {
+                     MessageBox.Show("Код ошибки:" + response.StatusCode + " : Сообщение - " + response.ReasonPhrase, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
+                     return null;
+                 }
            }
            catch (Exception ex)
            {
@@ -77,7 +77,6 @@ namespace StoreSystem.ConnectToDB.Model.ApiCRUDs
                 return null;
            }
         }
-
 
 
         #region Shift
@@ -126,8 +125,6 @@ namespace StoreSystem.ConnectToDB.Model.ApiCRUDs
                 return null;
             }
 }
-
-
         public string AddShift(Shift ShiftForAdd)
         {
             try

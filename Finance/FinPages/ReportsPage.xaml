@@ -330,7 +330,11 @@
                     <!-- Тип отчёта -->
                     <StackPanel Grid.Column="0" Orientation="Vertical" Margin="0,0,12,0">
                         <TextBlock Text="Тип отчёта" FontWeight="SemiBold" Foreground="#121518" Margin="0,0,0,6"/>
-                        <ComboBox x:Name="cbReportType" SelectionChanged="Generate_Click" MinWidth="250">
+                        <ComboBox x:Name="cbReportType"
+                                  SelectionChanged="Generate_Click"
+                                  MinWidth="250"
+                                  Style="{DynamicResource ComboBoxFlatStyle}"
+                                  >
                             <ComboBoxItem Tag="SalesByDay"       Content="Продажи по дням"/>
                             <ComboBoxItem Tag="SalesByCashier"   Content="Продажи по кассирам"/>
                             <ComboBoxItem Tag="TopSku"           Content="ТОП-SKU по выручке"/>
@@ -339,6 +343,7 @@
                             <ComboBoxItem Tag="ExpiringValidity" Content="Истекающая валидность"/>
                             <ComboBoxItem Tag="SlowMovers"       Content="Медленные товары (без продаж)"/>
                             <ComboBoxItem Tag="PriceAnomalies"   Content="Ценовые аномалии"/>
+                            <ComboBoxItem Tag="CashierShift"     Content="Смены кассиров"/>
                         </ComboBox>
                     </StackPanel>
 
@@ -369,7 +374,7 @@
                     <StackPanel Grid.Column="3" Orientation="Vertical">
                         <TextBlock Text="Параметры" FontWeight="SemiBold" Foreground="#121518" Margin="0,0,0,6"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                            <TextBlock Text="Top N:" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                            <TextBlock Text="Top N:                 " VerticalAlignment="Center" Margin="0,0,6,0"/>
                             <TextBox x:Name="tbTopN" Width="60" Text="20" TextChanged="Generate_Click"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal">
@@ -405,13 +410,17 @@
                        Foreground="#121518"/>
 
             <!-- Таблица -->
-            <DataGrid Grid.Row="5" x:Name="dg"
+            
+                <DataGrid  x:Name="dg"
+                           Grid.Row="5"
                       Style="{DynamicResource DataGridStyle1}"
                       RowStyle="{DynamicResource DataGridRowStyle1}"
                       CellStyle="{DynamicResource DataGridCellStyle1}"
                       ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}"
                       AutoGenerateColumns="True"
-                      IsReadOnly="True"/>
+                      IsReadOnly="True"
+                           />
+           
         </Grid>
     </Border>
 </Page>

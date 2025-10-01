@@ -32,7 +32,7 @@
                       Margin="0 20 0 0"
                       StaysOpenOnEdit="True"
                       SelectionChanged="SelectedTovarType"
-                     
+                      Style="{DynamicResource ComboBoxFlatStyle}"
                       SelectedValuePath="Artikul">
                   
                     <ComboBox.ItemTemplate>

@@ -1,4 +1,6 @@
-﻿using StoreSystem.Classes;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using StoreSystem.Cashier.CashWindows;
+using StoreSystem.Classes;
 using StoreSystem.ConnectToDB.Model;
 using StoreSystem.ConnectToDB.Model.ApiCRUDs;
 using StoreSystem.Skladnoi;
@@ -46,11 +48,12 @@ namespace StoreSystem.Cashier.Refund
         List<ForOutputTovarsInPaycheck> forOutput;
         int SUMMARYforRefundTovarInCheck = 0;
         string PaymentIDforRefundTovarInCheck = "";
-        public MainRefundWindow()
+        Account account;
+        public MainRefundWindow(Account _account)
         {
             InitializeComponent();
             api = new APIClass();
-
+            account = _account;
 
             //       public int Number { get; set; }
             //public DateTime Time { get; set; }
@@ -86,7 +89,7 @@ namespace StoreSystem.Cashier.Refund
                         selltovar = item
                     });
                 }
-
+                foreach (var item in refundDatagrids) item.Time = item.Time.AddHours(5);
                 DataGridtable.ItemsSource = refundDatagrids;
                 CountRezultTbx.Text = "Результатов: " + refundDatagrids.Count.ToString();
                 #endregion
@@ -113,6 +116,8 @@ namespace StoreSystem.Cashier.Refund
         {
             try
             {
+                List<CashierLbx> forCheckCashierLbx = new(); //список товаров для возврата(для печати на чеке)
+                int i = 1; //для чека #
                 RefundDatagridClass forRefund = (RefundDatagridClass)(sender as FrameworkElement).DataContext;
                 //name = summa
                 //comment = paymentid
@@ -121,6 +126,7 @@ namespace StoreSystem.Cashier.Refund
                 string IsBank = api.ListOfReceipts(new Tovar() { Name = forRefund.Summary.ToString(), Comment = forRefund.PaymentId });
                 var listl = sel.Where(x => x.SellTovars_id == forRefund.selltovar.SellTovars_id).ToList();
 
+                StaticClassForUrlCardPayment.PaymentId = PaymentIDforRefundTovarInCheck;
                 if (IsBank == "Оплата была совершена наличным расчетом") //если провал, то делаем манибэк налом
                 {
                     CashierShift.summaNal += forRefund.Summary;
@@ -132,15 +138,23 @@ namespace StoreSystem.Cashier.Refund
                     foreach (var item in listl)
                     {
                         CashierShift.countNal += item.Count;
-
+                        forCheckCashierLbx.Add(new()
+                        {
+                            Count = item.Count,
+                            Number = i,
+                            Price = item.Summary / item.Count,
+                            tovar = t.FirstOrDefault(x => x.Tovar_id == item.Tovar_id)
+                        });
+                        i++;
                         //для таблицы Refund
                         refundlist.Add(new ConnectToDB.Model.Refund
                         {
                             PaymentId = forRefund.selltovar.PaymentId,
                             Cashier_id = forRefund.selltovar.Kassir_id,
                             Count = item.Count,
-                            Date = DateTime.Now,
+                            Date = DateTime.Now.ToUniversalTime(),
                             Summary = item.Summary,
+                            Tovar = item.Tovar,
                             Tovar_id = item.Tovar_id
                         });
 
@@ -170,6 +184,16 @@ namespace StoreSystem.Cashier.Refund
                     foreach (var item in listl)
                     {
                         CashierShift.countBeznal += item.Count;
+                        
+                        //для чека о возврате
+                        forCheckCashierLbx.Add(new()
+                        {
+                            Count = item.Count,
+                            Number = i,
+                            Price = item.Summary / item.Count,
+                            tovar = t.FirstOrDefault(x => x.Tovar_id == item.Tovar_id)
+                        });
+                        i++;
 
                         //для таблицы Refund
                         refundlist.Add(new ConnectToDB.Model.Refund
@@ -177,7 +201,7 @@ namespace StoreSystem.Cashier.Refund
                             PaymentId = forRefund.selltovar.PaymentId,
                             Cashier_id = forRefund.selltovar.Kassir_id,
                             Count = item.Count,
-                            Date = DateTime.Now,
+                            Date = DateTime.Now.ToUniversalTime(),
                             Summary = item.Summary,
                             Tovar_id = item.Tovar_id
                         });
@@ -198,7 +222,6 @@ namespace StoreSystem.Cashier.Refund
                 }
 
 
-
                 s = api.SkladList();
                 foreach (var item in listl)
                 {
@@ -206,6 +229,14 @@ namespace StoreSystem.Cashier.Refund
                     forUpdate.Count += item.Count;
                     api.UpdateSklad(forUpdate);
                 }
+
+                #region Печать чека о возврате
+                StaticClassForUrlCardPayment.PaymentId = forRefund.selltovar.PaymentId;
+                CheckForPrint printCheck = new CheckForPrint(account, forCheckCashierLbx, forRefund.selltovar.Date_sell, forRefund.selltovar.SellTovars_id, forRefund.selltovar.Summary, "Возврат");
+       // public CheckForPrint(Account _account, List<CashierLbx> kassa, DateTime data_prodagi, int numbercheck, int summa, string str) //печать чека о ВОЗВРАТЕ
+
+                #endregion
+
                 Close();
             }
             catch (Exception ee)
@@ -315,8 +346,7 @@ namespace StoreSystem.Cashier.Refund
                             list.Add(a);
                 }
 
-
-
+                 
                 DataGridtable.ItemsSource = null;
                 DataGridtable.ItemsSource = list;
                 CountRezultTbx.Text = "Результатов: " + list.Count;
@@ -391,8 +421,7 @@ namespace StoreSystem.Cashier.Refund
                     SUMMARYforRefundTovarInCheck += selectedTovar.Summary;
                     PaymentIDforRefundTovarInCheck = refundDatagrids.First(x => x.selltovar.SellTovars_id == selectedTovar.sellTovars_id).PaymentId;
                     var AddOrDelete = sel.First(x => x.SellTovars_id == selectedTovar.sellTovars_id && x.Tovar_id == selectedTovar.tovar.Tovar_id);
-
-
+                    
                     Sell addordel = new Sell()
                     {
                         Count = 1,
@@ -462,10 +491,12 @@ namespace StoreSystem.Cashier.Refund
         {
             try
             {
+                List<CashierLbx> forCheckCashierLbx = new(); //список товаров для возврата(для печати на чеке)
+                int i = 1; //для чека #
                 string IsBank = api.ListOfReceipts(new Tovar() { Name = SUMMARYforRefundTovarInCheck.ToString(), Comment = PaymentIDforRefundTovarInCheck });
 
                 List<ConnectToDB.Model.Refund> refundlist = new List<ConnectToDB.Model.Refund>();
-
+                var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
 
 
 
@@ -487,25 +518,38 @@ namespace StoreSystem.Cashier.Refund
                                 forRemoveSell = selForRemove.Where(x => x.SellTovars_id == item.SellTovars_id && x.Tovar_id == item.Tovar_id).ToList();
 
                                 var updOrDeleteSell = sel.First(x => x.Sell_id == item.Sell_id);
-
-                                if (forRemoveSell.Count == updOrDeleteSell.Count)
+                              
+                                if (forRemoveSell.Count == updOrDeleteSell.Count) //если например в чеке 2 одинановых товара и хотят их оба вернуть
                                 {
                                     //CashierShift.countNal += item.Count;
                                     //CashierShift.summaNal += item.Summary;
+                                    int priceForOneTovar = updOrDeleteSell.Summary / updOrDeleteSell.Count;
 
-                                    var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
+                                    #region для подсчета итоговой суммы возврата по этому товару
+                                    var sum = 0;
+                                    foreach (var item2 in forRemoveSell)
+                                        sum += item2.Summary;
+                                    #endregion
+
+                                    forCheckCashierLbx.Add(new()
+                                    {
+                                        Count = updOrDeleteSell.Count,
+                                        Number = i,
+                                        Price = sum/updOrDeleteSell.Count,
+                                        tovar = t.FirstOrDefault(x => x.Tovar_id == updOrDeleteSell.Tovar_id)
+                                    });
+                                    i++;
 
                                     //для таблицы Refund
                                     refundlist.Add(new ConnectToDB.Model.Refund
                                     {
                                         PaymentId = forRefund.PaymentId,
                                         Cashier_id = forRefund.Kassir_id,
-                                        Count = updOrDeleteSell.Count,
-                                        Date = DateTime.Now,
-                                        Summary = updOrDeleteSell.Summary,
+                                        Count = forRemoveSell.Count,
+                                        Date = DateTime.Now.ToUniversalTime(),
+                                        Summary = priceForOneTovar * forRemoveSell.Count,
                                         Tovar_id = item.Tovar_id
                                     });
-
                                     api.DeleteSell(item.Sell_id);
                                 }
 
@@ -519,18 +563,31 @@ namespace StoreSystem.Cashier.Refund
                                     updOrDeleteSell.Summary -= priceForOneTovar * forRemoveSell.Count;
                                     updOrDeleteSell.Count -= forRemoveSell.Count;
 
-                                    var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
+                                    #region для подсчета итоговой суммы возврата по этому товару
+                                    var sum = 0;
+                                    foreach (var item2 in forRemoveSell)
+                                        sum += item2.Summary;
+                                    #endregion
 
+                                    forCheckCashierLbx.Add(new()
+                                    {
+                                        Count = forRemoveSell.Count,
+                                        Number = i,
+                                        Price = sum / forRemoveSell.Count,
+                                        tovar = t.FirstOrDefault(x => x.Tovar_id == updOrDeleteSell.Tovar_id)
+                                    });
+                                    i++;
                                     //для таблицы Refund
                                     refundlist.Add(new ConnectToDB.Model.Refund
                                     {
                                         PaymentId = forRefund.PaymentId,
                                         Cashier_id = forRefund.Kassir_id,
-                                        Count = updOrDeleteSell.Count,
-                                        Date = DateTime.Now,
-                                        Summary = updOrDeleteSell.Summary,
+                                        Count = forRemoveSell.Count,
+                                        Date = DateTime.Now.ToUniversalTime(),
+                                        Summary = priceForOneTovar * forRemoveSell.Count,
                                         Tovar_id = updOrDeleteSell.Tovar_id
                                     });
+                                   
 
                                     api.UpdateSell(updOrDeleteSell);
                                 }
@@ -565,9 +622,7 @@ namespace StoreSystem.Cashier.Refund
                             api.AddRefund(item);
                         }
 
-                        SUMMARYforRefundTovarInCheck = 0;
-                        PaymentIDforRefundTovarInCheck = "";
-
+                    
                         //добавляем товары обратно на склад
                         List<int> IsUpdated = new List<int>();
 
@@ -595,7 +650,7 @@ namespace StoreSystem.Cashier.Refund
 
                 }
 
-                else // успешно деньги на карту отправились
+                else // НЕ РАБОТАЕТ
                 {
                     CashierShift.summaBeznal += SUMMARYforRefundTovarInCheck;
                     CashierShift.countBeznal += selForRemove.Count;
@@ -616,8 +671,15 @@ namespace StoreSystem.Cashier.Refund
                                 var updOrDeleteSell = sel.First(x => x.Sell_id == item.Sell_id);
                                 if (forRemoveSell.Count == updOrDeleteSell.Count)
                                 {
-
-                                    var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
+                                    forCheckCashierLbx.Add(new()
+                                    {
+                                        Count = item.Count,
+                                        Number = i,
+                                        Price = item.Summary / item.Count,
+                                        tovar = t.FirstOrDefault(x => x.Tovar_id == item.Tovar_id)
+                                    });
+                                    i++;
+                                  //  var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
 
                                     //для таблицы Refund
                                     refundlist.Add(new ConnectToDB.Model.Refund
@@ -625,7 +687,7 @@ namespace StoreSystem.Cashier.Refund
                                         PaymentId = forRefund.PaymentId,
                                         Cashier_id = forRefund.Kassir_id,
                                         Count = updOrDeleteSell.Count,
-                                        Date = DateTime.Now,
+                                        Date = DateTime.Now.ToUniversalTime(),
                                         Summary = updOrDeleteSell.Summary,
                                         Tovar_id = item.Tovar_id
                                     });
@@ -640,7 +702,7 @@ namespace StoreSystem.Cashier.Refund
                                     updOrDeleteSell.Summary -= priceForOneTovar * forRemoveSell.Count;
                                     updOrDeleteSell.Count -= forRemoveSell.Count;
 
-                                    var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
+                                 //   var forRefund = st.First(x => x.PaymentId == PaymentIDforRefundTovarInCheck);
 
                                     //для таблицы Refund
                                     refundlist.Add(new ConnectToDB.Model.Refund
@@ -648,7 +710,7 @@ namespace StoreSystem.Cashier.Refund
                                         PaymentId = forRefund.PaymentId,
                                         Cashier_id = forRefund.Kassir_id,
                                         Count = updOrDeleteSell.Count,
-                                        Date = DateTime.Now,
+                                        Date = DateTime.Now.ToUniversalTime(),
                                         Summary = updOrDeleteSell.Summary,
                                         Tovar_id = updOrDeleteSell.Tovar_id
                                     });
@@ -718,6 +780,16 @@ namespace StoreSystem.Cashier.Refund
                     }
 
                 }
+
+                #region Печать чека о возврате
+                StaticClassForUrlCardPayment.PaymentId = PaymentIDforRefundTovarInCheck;
+                CheckForPrint printCheck = new CheckForPrint(account, forCheckCashierLbx, forRefund.Date_sell, forRefund.SellTovars_id, refundlist.Select(x => x.Summary).Sum(), "Возврат");
+                // public CheckForPrint(Account _account, List<CashierLbx> kassa, DateTime data_prodagi, int numbercheck, int summa, string str) //печать чека о ВОЗВРАТЕ
+                #endregion
+                SUMMARYforRefundTovarInCheck = 0;
+                PaymentIDforRefundTovarInCheck = "";
+
+
 
             }
             catch (Exception ee)

@@ -30,6 +30,8 @@ namespace StoreSystem.Finance.FinPages
         private List<Sklad> _sklad;
         private List<Shipment> _shipments;
         private List<History> _history;
+        private List<Manufacturer> _manufacturer;
+        private List<Shift> _shifts;
 
         private DataTable _current = new DataTable();
 
@@ -122,6 +124,7 @@ namespace StoreSystem.Finance.FinPages
         {
             try
             {
+                if (tbHorizonDays == null || cbReportType == null || tbTopN == null) return;
                 var tag = (cbReportType.SelectedItem as ComboBoxItem)?.Tag?.ToString();
                 tbTopN.IsEnabled = tag == "TopSku";
                 tbHorizonDays.IsEnabled = tag == "ExpiringValidity" || tag == "SlowMovers";
@@ -178,10 +181,10 @@ namespace StoreSystem.Finance.FinPages
                             var header = col.FirstCell().GetValue<string>().ToLowerInvariant();
 
                             // формат даты
-                            if (header.Contains("дата") || header.Contains("день") || header.Contains("годен") || header.Contains("продажа"))
+                            if (header.Contains("дата") || header.Contains("день") || header.Contains("годен") || header.Contains("продажа") || header.Contains("начало") || header.Contains("окончание") || header.Contains("первый чек") || header.Contains("последний чек"))
                             {
                                 foreach (var cell in col.CellsUsed().Skip(1))
-                                    cell.Style.DateFormat.Format = "dd.MM.yyyy";
+                                    cell.Style.DateFormat.Format = "dd.MM.yyyy HH-mm-ss";
                             }
 
                             // формат денег / сумм / цен
@@ -253,14 +256,16 @@ namespace StoreSystem.Finance.FinPages
                 if (dg == null) return;
                 Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
 
-                _sells      = _api.SellList()       ?? new List<Sell>();
-                _sellTovars = _api.SellTovarsList() ?? new List<SellTovars>();
-                _accounts   = _api.AccountList()    ?? new List<Account>();
-                _tovars     = _api.TovarList()      ?? new List<Tovar>();
-                _sklad      = _api.SkladList()      ?? new List<Sklad>();
-                _shipments  = _api.ShipmentList()   ?? new List<Shipment>();
-                _history    = _api.HistoryList()    ?? new List<History>();
-              //  await EnsureDataLoadedAsync();
+                _sells      = _api.SellList()             ?? new List<Sell>();
+                _sellTovars = _api.SellTovarsList()       ?? new List<SellTovars>();
+                _accounts   = _api.AccountList()          ?? new List<Account>();
+                _tovars     = _api.TovarList()            ?? new List<Tovar>();
+                _sklad      = _api.SkladList()            ?? new List<Sklad>();
+                _shipments  = _api.ShipmentList()         ?? new List<Shipment>();
+                _history    = _api.HistoryList()          ?? new List<History>();
+              _manufacturer = _api.ManufacturerList()     ?? new List<Manufacturer>();
+                _shifts     = _api.ShiftList()            ?? new List<Shift>();
+                //  await EnsureDataLoadedAsync();
 
                 var (from, to, topN, horizonDays, tag) = ReadFilters();
 
@@ -275,6 +280,7 @@ namespace StoreSystem.Finance.FinPages
                     "ExpiringValidity" => BuildExpiringValidity(horizonDays),
                     "SlowMovers" => BuildSlowMovers(horizonDays),
                     "PriceAnomalies" => BuildPriceAnomalies(),
+                    "CashierShift" => BuildCashierShift(),
                     _ => new DataTable()
                 };
 
@@ -724,9 +730,125 @@ namespace StoreSystem.Finance.FinPages
                return null;
             }
         }
+
+
+        private DataTable BuildCashierShift()
+        {
+            try
+            {
+                if (_shifts == null) _shifts = new List<Shift>();
+                if (_sellTovars == null) _sellTovars = new List<SellTovars>();
+                if (_sells == null) _sells = new List<Sell>();
+                if (_accounts == null) _accounts = new List<Account>();
+
+                var from = dpFrom?.SelectedDate?.Date;
+                var to = dpTo?.SelectedDate?.Date;
+
+                var shiftsFiltered = _shifts
+                    .Where(sh =>
+                        (!from.HasValue || sh.Date_End.Date >= from.Value) &&
+                        (!to.HasValue || sh.Date_Start.Date <= to.Value))
+                    .OrderBy(sh => sh.Date_Start)
+                    .ThenBy(sh => sh.Cashier_id)
+                    .ToList();
+
+                var accById = _accounts.ToDictionary(a => a.Account_id, a => a);
+                var sellsByReceipt = _sells.GroupBy(s => s.SellTovars_id)
+                                           .ToDictionary(g => g.Key, g => g.ToList());
+                var checksByCashier = _sellTovars.GroupBy(st => st.Kassir_id)
+                                                 .ToDictionary(g => g.Key, g => g.ToList());
+
+                var rows = new List<CashierShiftRow>();
+
+                foreach (var sh in shiftsFiltered)
+                {
+                    var start = sh.Date_Start.AddHours(5);
+                    var end = sh.Date_End.AddHours(5);
+
+                    string fio = accById.TryGetValue(sh.Cashier_id, out var acc)
+                        ? $"{acc.Surname} {acc.Name}{(string.IsNullOrWhiteSpace(acc.Patronymic) ? "" : " " + acc.Patronymic)}"
+                        : $"id={sh.Cashier_id}";
+
+                    var cashierChecks = checksByCashier.TryGetValue(sh.Cashier_id, out var list)
+                        ? list.Where(st => (DateSellOf(st) ?? DateTime.MinValue) >= start
+                                        && (DateSellOf(st) ?? DateTime.MinValue) <= end)
+                              .OrderBy(st => st.Date_sell)
+                              .ToList()
+                        : new List<SellTovars>();
+
+                    int checksCount = cashierChecks.Count;
+                    int positionsCount = 0;
+                    int unitsCount = 0;
+                    decimal revenue = 0m;
+                    DateTime? firstCheck = null;
+                    DateTime? lastCheck = null;
+
+                    foreach (var rc in cashierChecks)
+                    {
+                        if (firstCheck == null || rc.Date_sell < firstCheck) firstCheck = rc.Date_sell;
+                        if (lastCheck == null || rc.Date_sell > lastCheck) lastCheck = rc.Date_sell;
+
+                        var lines = sellsByReceipt.TryGetValue(rc.SellTovars_id, out var lp) ? lp : new List<Sell>();
+
+                        positionsCount += lines.Count;
+                        unitsCount += lines.Sum(l => l.Count);
+                        revenue += lines.Sum(l => GetSellingPriceOrZero(l.Tovar_id) * l.Count);
+                    }
+
+                    decimal avgCheck = checksCount > 0 ? revenue / checksCount : 0m;
+
+                    rows.Add(new CashierShiftRow
+                    {
+                        Shift_id = sh.Shift_id,
+                        Начало = start,
+                        Окончание = end,
+                        Кассир = fio,
+                        Чеков = checksCount,
+                        Позиции = positionsCount,
+                        Единиц = unitsCount,
+                        Выручка = revenue,
+                        Средний_чек = avgCheck,
+                        Первый_чек = firstCheck?.Date,
+                        Последний_чек = lastCheck?.Date,
+                        Shift_Summary_из_БД = sh.Summary
+                    });
+                }
+
+                return ToDataTable(rows);
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return new DataTable();
+            }
+        }
+
+
+
+
+
         #endregion
 
         #region Small utilities
+
+        public class CashierShiftRow
+        {
+            public int Shift_id { get; set; }
+            public DateTime Начало { get; set; }
+            public DateTime Окончание { get; set; }
+            public string Кассир { get; set; }
+            public int Чеков { get; set; }
+            public int Позиции { get; set; }
+            public int Единиц { get; set; }
+            public decimal Выручка { get; set; }
+            public decimal Средний_чек { get; set; }
+            public DateTime? Первый_чек { get; set; }
+            public DateTime? Последний_чек { get; set; }
+            public int Shift_Summary_из_БД { get; set; }
+        }
+
+
         private static DataTable ToDataTable<T>(IEnumerable<T> items)
         {
             try
@@ -753,7 +875,6 @@ namespace StoreSystem.Finance.FinPages
                     }
                     dt.Rows.Add(row);
                 }
-
                 return dt;
             }
             catch (Exception ee)

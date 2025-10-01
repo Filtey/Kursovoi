@@ -161,13 +161,14 @@ namespace StoreSystem.Cashier.CashWindows
                     shift = new Shift()
                     {
                         Cashier_id = account.Account_id,
-                        Date_Start = ((DateTime)CashierShift.Date_Start).AddHours(12),
-                        Date_End = ((DateTime)CashierShift.Date_Start).AddDays(1).AddHours(12),
+                        Date_Start = (CashierShift.Date_Start.Value.ToUniversalTime()),
+                        Date_End = (CashierShift.Date_Start.Value.ToUniversalTime().AddHours(1)),
                         Summary = CashierShift.MoneyInCashMachine
                     };
 
                     try
                     {
+                      
                         string rez = db.AddShift(shift);
                         shift = db.ShiftList().Where(x => x.Cashier_id == account.Account_id).ToList().Last();
                         if (rez != "Успех") throw new Exception();
@@ -570,7 +571,7 @@ namespace StoreSystem.Cashier.CashWindows
                         }
 
                         var forPayment = db.Beznal(summa, description).ToString();
-                        StaticClassForUrlCardPayment.PaymentId = forPayment.Substring(57);
+                        StaticClassForUrlCardPayment.PaymentId = forPayment.Substring(48);
 
 
                         //подсчет налом кол-ва и суммы 
@@ -635,7 +636,8 @@ namespace StoreSystem.Cashier.CashWindows
 
                 SellTovars sellTovars = new SellTovars();
                 sellTovars.Kassir_id = account.Account_id;
-                sellTovars.Date_sell = DateTime.UtcNow.AddHours((DateTime.Now - DateTime.UtcNow).Hours + 1);
+              //var c = DateTime.UtcNow.ToUniversalTime().AddHours(5);
+                sellTovars.Date_sell = DateTime.Now.ToUniversalTime(); //.AddHours((DateTime.Now - DateTime.UtcNow).Hours + 1)
                 sellTovars.PaymentId = StaticClassForUrlCardPayment.PaymentId;
                 sellTovars.Summary = summa;
                 db.AddSellTovars(sellTovars);
@@ -665,7 +667,7 @@ namespace StoreSystem.Cashier.CashWindows
                 {
 
                     #region Печать чека
-                    CheckForPrint printCheck = new CheckForPrint(account, kassa, sellTovars.Date_sell, f, summa);
+                    CheckForPrint printCheck = new CheckForPrint(account, kassa, sellTovars.Date_sell.AddHours(5), f, summa);
                     //   printCheck.ShowDialog();
                     #endregion
 
@@ -984,7 +986,7 @@ namespace StoreSystem.Cashier.CashWindows
                         return;
                     }
                     shiftInDB.Summary = CashierShift.MoneyInCashMachine;
-                    shiftInDB.Date_End = DateTime.Now;
+                    shiftInDB.Date_End = DateTime.Now.ToUniversalTime();
                     db.UpdateShift(shiftInDB);
 
                     //логику подсчета всего, на печать
@@ -1026,7 +1028,7 @@ namespace StoreSystem.Cashier.CashWindows
         {
             try
             {
-                MainRefundWindow refund = new MainRefundWindow();
+                MainRefundWindow refund = new MainRefundWindow(account);
                 refund.Closing += Refund_Closing;
                 refund.ShowDialog();
             }
