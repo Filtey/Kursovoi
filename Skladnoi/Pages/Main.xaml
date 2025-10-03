@@ -341,7 +341,17 @@
                         </StackPanel>
                     </Button.ToolTip>
                 </Button>
-
+                <Button Style="{DynamicResource addButton}" Margin="0 20 400 0" Width="210" Click="ExportDataButton">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:IconImage Icon="FileExport" Width="12" Foreground="#ffffff" Margin="0 0 10 0"/>
+                        <TextBlock Text="Экспорт товаров на складе"/>
+                    </StackPanel>
+                    <Button.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="Эскпорт информации о товарах на складе в файл .xls" />
+                        </StackPanel>
+                    </Button.ToolTip>
+                </Button>
                 <!--separator-->
                 <Separator Height="1" Grid.Row="3"
                            Background="#dae2ea"
@@ -475,7 +485,7 @@
                         <DataGridTextColumn Header="Рознич. цена" 
                                             IsReadOnly="True"
                                             Width="*"                                           
-                                            Binding="{Binding sklad.Selling_priсe}"/>
+                                            Binding="{Binding sklad.Selling_price}"/>
 
                         <DataGridTextColumn Header="Кол-во" 
                                             IsReadOnly="True"

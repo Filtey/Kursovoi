@@ -15,7 +15,7 @@ namespace StoreSystem.ConnectToDB.Model
         public int Sklad_id { get; set; }
         public int Tovar_id { get; set; }
         public int Purchase_price { get; set; }
-        public int Selling_priсe { get; set; }
+        public int Selling_price { get; set; }
         public int Count { get; set; }
         public string? unit { get; set; }        
         public string? Comment { get; set; }

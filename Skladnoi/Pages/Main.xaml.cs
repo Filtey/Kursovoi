@@ -151,7 +151,7 @@ namespace StoreSystem.Skladnoi.Pages
             try
             {
                 //из экселя или вручную
-                ImportInFileOrHandWindow adt = new ImportInFileOrHandWindow();
+                ImportInFileOrHandWindow adt = new ImportInFileOrHandWindow("новый товар");
                 adt.Closing += Adt_Closing;
                 adt.ShowDialog();
             }
@@ -366,9 +366,31 @@ namespace StoreSystem.Skladnoi.Pages
         {
             try
             {
-                PostavkaWindow adt = new PostavkaWindow();
+                //из экселя или вручную
+                ImportInFileOrHandWindow adt = new ImportInFileOrHandWindow("поставка");
                 adt.Closing += Adt_Closing;
                 adt.ShowDialog();
+            }
+            catch (Exception ee)
+            {
+                var c = ee.Message;
+                MessageBox.Show("Проверьте своё подключение к Интернету!", "Нет соединения", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+        }
+
+
+        //экспорт информации о товарах на складе в файл 
+        private void ExportDataButton(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var dlg = new Microsoft.Win32.SaveFileDialog { Filter = "Excel|*.xlsx", FileName = "Склад.xlsx" };
+                if (dlg.ShowDialog() == true)
+                {
+                    ImportExportTovarToXLSX.ExportToExcel(new APIClass(), dlg.FileName);
+                    MessageBox.Show("Экспорт успешно завершён.", "Успешно", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
             catch (Exception ee)
             {

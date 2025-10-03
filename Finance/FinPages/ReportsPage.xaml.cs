@@ -357,7 +357,7 @@ namespace StoreSystem.Finance.FinPages
                 if (rec == null) return 0m;
 
                 // Попробуем сначала рефлексией (на случай неудобного имени)
-                var prop = rec.GetType().GetProperty("Selling_priсe") ?? rec.GetType().GetProperty("Selling_price");
+                var prop = rec.GetType().GetProperty("Selling_price") ?? rec.GetType().GetProperty("Selling_price");
                 if (prop != null)
                 {
                     var val = prop.GetValue(rec);
@@ -568,7 +568,7 @@ namespace StoreSystem.Finance.FinPages
                            join t in _tovars on sk.Tovar_id equals t.Tovar_id
                            let count = sk.Count
                            let buy = GetPropertyDecimal(sk, "Purchase_price")
-                           let sell = GetPropertyDecimal(sk, "Selling_priсe") ?? GetPropertyDecimal(sk, "Selling_price") ?? 0m
+                           let sell = GetPropertyDecimal(sk, "Selling_price") ?? GetPropertyDecimal(sk, "Selling_price") ?? 0m
                            select new
                            {
                                Артикул = t.Artikul,
@@ -712,7 +712,7 @@ namespace StoreSystem.Finance.FinPages
             {
                 var rows = from sk in _sklad
                            join t in _tovars on sk.Tovar_id equals t.Tovar_id
-                           let sell = GetPropertyDecimal(sk, "Selling_priсe") ?? GetPropertyDecimal(sk, "Selling_price")
+                           let sell = GetPropertyDecimal(sk, "Selling_price") ?? GetPropertyDecimal(sk, "Selling_price")
                            where !sell.HasValue || sell.Value <= 0m
                            select new
                            {

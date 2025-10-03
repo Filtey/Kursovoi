@@ -552,7 +552,7 @@ namespace StoreSystem.Cashier.CashWindows
                         foreach (var item in kassa)
                         {
                             summa += item.Count * item.Price;
-                            description += item.tovar.Artikul + " - " + item.sklad.Selling_priсe * item.Count + "; ";
+                            description += item.tovar.Artikul + " - " + item.sklad.Selling_price * item.Count + "; ";
                         }
                         CashlessPaymentWindow cashlessPayment = new CashlessPaymentWindow(summa, description);
                         cashlessPayment.Closed += IsPaymentSuccessful;
@@ -567,7 +567,7 @@ namespace StoreSystem.Cashier.CashWindows
                         foreach (var item in kassa)
                         {
                             summa += item.Count * item.Price;
-                            description += item.tovar.Artikul + " - " + item.sklad.Selling_priсe * item.Count + "; ";
+                            description += item.tovar.Artikul + " - " + item.sklad.Selling_price * item.Count + "; ";
                         }
 
                         var forPayment = db.Beznal(summa, description).ToString();
@@ -649,7 +649,7 @@ namespace StoreSystem.Cashier.CashWindows
                 foreach (var item in kassa)
                 {
                     var ttovar = t.Where(x => x.Tovar_id == item.sklad.Tovar_id).First();
-                    summary = item.Count * item.sklad.Selling_priсe;
+                    summary = item.Count * item.sklad.Selling_price;
 
                     db.AddSell(new Sell
                     {
@@ -845,7 +845,7 @@ namespace StoreSystem.Cashier.CashWindows
                 //если мы 2 раза выбираем товар, который уже есть в списке покупок, то мы просто count++ этому товару, а не добавляем его 2 раза в список покупок
                 if (kassa.Count != 0)
                 {
-                    var v = kassa.Where(x => x.sklad == Tov.sklad && x.Price == Tov.sklad.Selling_priсe).FirstOrDefault();
+                    var v = kassa.Where(x => x.sklad == Tov.sklad && x.Price == Tov.sklad.Selling_price).FirstOrDefault();
                     if (v != null)
                     {
                         v.Count++;
@@ -867,7 +867,7 @@ namespace StoreSystem.Cashier.CashWindows
                     Number = k,
                     tovar = t.Where(x => x.Tovar_id == Tov.tovar.Tovar_id).First(),
                     sklad = Tov.sklad,
-                    Price = Tov.sklad.Selling_priсe,
+                    Price = Tov.sklad.Selling_price,
                     Count = 1
                 };
 

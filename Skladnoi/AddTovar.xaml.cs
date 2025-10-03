@@ -159,7 +159,7 @@ namespace StoreSystem.Skladnoi
                 // newItemInSklad.Tovar = newTovar;
                 newItemInSklad.Tovar_id = db.TovarList().Last().Tovar_id;
                 newItemInSklad.Purchase_price = int.Parse(ZakupPriceTextbox.textBox.Text);
-                newItemInSklad.Selling_priсe = int.Parse(SellPriceTextbox.textBox.Text);
+                newItemInSklad.Selling_price = int.Parse(SellPriceTextbox.textBox.Text);
                 newItemInSklad.Count = int.Parse(CountTextbox.textBox.Text);
                 newItemInSklad.unit = UnitTextbox.textBox.Text;
                 newItemInSklad.Comment = CommentTextbox.textBox.Text;

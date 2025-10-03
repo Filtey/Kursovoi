@@ -428,7 +428,7 @@
                         <DataGridTextColumn Header="Рознич. цена" 
                                             IsReadOnly="True"
                                             Width="*"
-                                             Binding="{Binding sklad.Selling_priсe}"/>
+                                             Binding="{Binding sklad.Selling_price}"/>
 
                         <DataGridTextColumn Header="Кол-во" 
                                             IsReadOnly="True"

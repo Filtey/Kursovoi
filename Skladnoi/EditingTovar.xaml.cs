@@ -93,7 +93,7 @@ namespace StoreSystem.Skladnoi
 
 
                 ZakupPriceTextbox.textBox.Text = forEdit.Purchase_price.ToString();
-                SellPriceTextbox.textBox.Text = forEdit.Selling_priсe.ToString();
+                SellPriceTextbox.textBox.Text = forEdit.Selling_price.ToString();
                 CountTextbox.textBox.Text = forEdit.Count.ToString();
                 UnitTextbox.textBox.Text = forEdit.unit;
                 CommentTextbox.textBox.Text = forEdit.Comment;
@@ -179,7 +179,7 @@ namespace StoreSystem.Skladnoi
                 //forEdit.Tovar = newTovar;
                 //forEdit.Tovar_id = newTovar.Tovar_id;
                 forEdit.Purchase_price = int.Parse(ZakupPriceTextbox.textBox.Text);
-                forEdit.Selling_priсe = int.Parse(SellPriceTextbox.textBox.Text);
+                forEdit.Selling_price = int.Parse(SellPriceTextbox.textBox.Text);
                 forEdit.Count = int.Parse(CountTextbox.textBox.Text);
                 forEdit.unit = UnitTextbox.textBox.Text;
                 forEdit.Comment = CommentTextbox.textBox.Text;
